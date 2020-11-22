@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="611.12524"
+   height="75.405518"
+   viewBox="0 0 161.69355 19.951043"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
+   sodipodi:docname="title.svg"
+   inkscape:export-filename="/home/enet4/dev/gameoff2020/assets/images/title.png"
+   inkscape:export-xdpi="122.21917"
+   inkscape:export-ydpi="122.21917">
+  <defs
+     id="defs2">
+    <linearGradient
+       inkscape:collect="always"
+       id="win-in-space-grad1">
+      <stop
+         style="stop-color:#181818;stop-opacity:0.62423259"
+         offset="0"
+         id="stop882" />
+      <stop
+         style="stop-color:#8b8b8b;stop-opacity:0"
+         offset="1"
+         id="stop884" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#win-in-space-grad1"
+       id="linearGradient874"
+       gradientUnits="userSpaceOnUse"
+       x1="169.32727"
+       y1="81.362587"
+       x2="319.33395"
+       y2="67.07621" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#win-in-space-grad1-9"
+       id="linearGradient867"
+       gradientUnits="userSpaceOnUse"
+       x1="330.16153"
+       y1="61.701145"
+       x2="169.32727"
+       y2="81.362587"
+       gradientTransform="translate(4.5524791,-7.6509225)" />
+    <linearGradient
+       inkscape:collect="always"
+       id="win-in-space-grad1-9">
+      <stop
+         style="stop-color:#494949;stop-opacity:0.38754785"
+         offset="0"
+         id="stop859" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1"
+         offset="1"
+         id="stop861" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#win-in-space-grad1-9"
+       id="linearGradient871"
+       gradientUnits="userSpaceOnUse"
+       x1="330.16153"
+       y1="61.701145"
+       x2="169.32727"
+       y2="81.362587"
+       gradientTransform="translate(4.5524784,-4.3995731)" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.81635763"
+     inkscape:cx="250.34356"
+     inkscape:cy="-113.75286"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1015"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     sodipodi:insensitive="true"
+     transform="translate(-173.15322,-53.872616)"
+     style="display:none">
+    <image
+       sodipodi:absref="/home/enet4/Pictures/Screenshot_2020-11-22_18-29-03.png"
+       xlink:href="../../../Pictures/Screenshot_2020-11-22_18-29-03.png"
+       style="opacity:1"
+       width="402.69583"
+       height="227.80624"
+       preserveAspectRatio="none"
+       id="image843"
+       x="52.652084"
+       y="20.696478" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Layer 2"
+     transform="translate(-173.15322,-53.872616)">
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:22.5778px;line-height:1.25;font-family:'LEMON MILK';-inkscape-font-specification:'LEMON MILK, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient867);fill-opacity:1;stroke:#061e40;stroke-width:1.4;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       x="171.44992"
+       y="72.737808"
+       id="text849"><tspan
+         sodipodi:role="line"
+         id="tspan847"
+         x="171.44992"
+         y="72.737808"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:22.5778px;font-family:'LEMON MILK';-inkscape-font-specification:'LEMON MILK, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:url(#linearGradient867);fill-opacity:1;stroke:#061e40;stroke-width:1.4;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">WIN IN SPACE</tspan></text>
+  </g>
+</svg>

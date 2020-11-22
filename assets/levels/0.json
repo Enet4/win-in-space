@@ -1,0 +1,48 @@
+{
+    "comment": "The first level.",
+    "bounds": {
+        "left": -600,
+        "top": -900,
+        "right": 1600,
+        "bottom": 950
+    },
+    "camera": {
+        "x": 900,
+        "y": -340,
+        "zoom": 1,
+        "minZoom": 0.5,
+        "maxZoom": 2
+    },
+    "lifePlanets": [
+        {
+            "id": "player1",
+            "x": 0,
+            "y": 0,
+            "power": 2
+        },
+        {
+            "id": "player2",
+            "x": 1200,
+            "y": -375,
+            "power": 2
+        }
+    ],
+    "things": [
+        {
+            "id": "planet1",
+            "textureId": "planet_gamma",
+            "x": 475,
+            "y": -430,
+            "size": 150,
+            "mass": 190
+        },
+        {
+            "id": "planet2",
+            "textureId": "planet_neptune",
+            "x": 650,
+            "y": 300,
+            "size": 68,
+            "mass": 76
+        }
+    ]
+}

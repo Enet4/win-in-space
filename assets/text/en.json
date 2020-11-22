@@ -1,0 +1,21 @@
+{
+    "boot.loading": "Loading...",
+    "help.1": "1. Choose an angle of fire",
+    "help.2": "2. Set the power of the shot",
+    "help.3": "3. Observe the trajectory",
+    "help.4": "4. Hit the opponent to win!",
+    "help.back": "Back",
+    "menu.help": "How to Play",
+    "menu.one_player": "One Player",
+    "menu.two_players": "Two Players",
+    "game.angle": "Angle",
+    "game.force": "Force",
+    "game.fire": "Fire",
+    "game.player_one": "Player One",
+    "game.player_two": "Player Two",
+    "game.win": "wins in space",
+    "game.lose": "You do not win",
+    "game.really_quit": "Do you really want to quit this game?",
+    "game.quit": "Quit",
+    "game.cancel": "Cancel"
+}
