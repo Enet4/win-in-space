@@ -88,7 +88,7 @@ function toggleMusic() {
         aToggleMusic.innerText = "Enable music";
     } else {
         aToggleMusic.innerText = "Disable music";
-        game.sound.play('win-in-space', {loop: true});
+        game.sound.play('win-in-space', {loop: true, volume: 0.7});
     }
     localStorage.setItem("musicEnabled", musicEnabled.toString());
 }

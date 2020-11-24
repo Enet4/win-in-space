@@ -31,7 +31,7 @@ class BootScene extends Phaser.Scene {
         // Register a load complete event to launch the title screen when all files are loaded
         this.load.on('complete', () => {
             if (localStorage.getItem('musicEnabled') === 'true') {
-                this.sound.play('win-in-space', {loop: true});
+                this.sound.play('win-in-space', {loop: true, volume: 0.7});
             }
             setTimeout(() => this.scene.start('MenuScene'), 100);
         });
@@ -58,7 +58,7 @@ class BootScene extends Phaser.Scene {
         this.load.audio('muffled-distant-explosion', 'assets/sounds/muffled-distant-explosion.wav');
         this.load.audio('chunky-explosion', 'assets/sounds/chunky-explosion.wav');
         
-        this.load.audio('win-in-space', 'assets/bgm/win in space-v0.2-vbr.ogg');
+        this.load.audio('win-in-space', 'assets/bgm/win in space-v0.3.ogg');
     }
 }
 
