@@ -69,6 +69,8 @@ export default class SpaceScene extends Phaser.Scene {
     private decision: TurnDecision[];
     /// the canon images by player
     private canons: Phaser.GameObjects.Image[];
+    /// the nation flags by player
+    private flags: Phaser.GameObjects.Image[];
     /// the line represention the angle
     private angleLine: Phaser.GameObjects.Line;
     /// whether the player is angling
@@ -78,6 +80,8 @@ export default class SpaceScene extends Phaser.Scene {
     private lastTrajectory: (Phaser.Curves.Path | null)[];
     private gfxTrajectory: Phaser.GameObjects.Graphics;
     private trajectoryBuilder: TrajectoryBuilder;
+    /// whether the camera is following the projectile
+    private isFollowing: boolean;
 
     /// ID of the player currently playing
     private currentPlayer: PlayerId;
@@ -203,24 +207,34 @@ export default class SpaceScene extends Phaser.Scene {
         });
 
         this.canons = [];
+        this.flags = [];
 
         // create angling arrow
         this.angleLine = this.add.line(0, 0, 0, 0, 0, 0, 0xFF0000, 0.75);
         this.angleLine.setVisible(false);
 
         let index = 0;
-        for (const { x, y, size, textureId } of this.lifePlanets) {
-            let planetId = index;
+        for (const { id, x, y, size, textureId } of this.lifePlanets) {
+            const planetId = parseInt(id.slice('player'.length)) - 1;
             let img = this.add.image(x, y, textureId || 'planet_blue');
             img.setInteractive();
             img.setSize(size * 2, size * 2);
             img.setDisplaySize(size * 2, size * 2);
-            let canon = this.add.image(x, y, 'canon');
+            const canon = this.add.image(x, y, 'canon');
             const canonSize = size * 2.75;
             canon.setSize(canonSize, canonSize);
             canon.setDisplaySize(canonSize, canonSize);
-            canon.setInteractive();
             this.canons.push(canon);
+            // if life planet is mostly to the right,
+            // point canon to the other side
+            if (x > this.cameras.main.centerX) {
+                canon.setRotation(Math.PI);
+            }
+
+            let flagTexture = planetId === 0 ? 'flag-cyan': 'flag-purple';
+            const flag = this.add.image(x, y - 12, flagTexture);
+            flag.setDisplaySize(42, 42);
+            this.flags.push(flag);
 
             const hPointerDown = (pointer) => {
                 if (this.state !== State.Playing) return;
@@ -312,24 +326,25 @@ export default class SpaceScene extends Phaser.Scene {
         //console.log("update delta=%s", delta)
         this.cameraControl.update(delta);
 
-        if (this.projectile.image.visible) {
+        if (this.state === State.Projecting && this.projectile.image.visible) {
             let out = this.reactor.apply(delta, this.projectile);
 
             if (out.collision) {
                 // interpret the kind of collision
 
-                if (out.collision.startsWith('player') && out.collision !== `player${this.currentPlayer + 1}`) {
+                if (out.collision.startsWith('player')) {
                     let pId = parseInt(out.collision.slice('player'.length)) - 1;
-                    if (pId !== this.currentPlayer) {
                         
-                        // TODO explode stuff
-                        this.sndChunkyExplosion.play();
+                    // explode stuff
+                    this.sndChunkyExplosion.play();
+                    // TODO show explosions 'n' stuff
+                    this.cameras.main.shake(250, 0.25);
 
-                        let msgKey = this.currentPlayer === 0 ? 'game.player_one' : 'game.player_two';
-                        this.hud.displayMessage(`\n${localized(msgKey)}\n\n${localized('game.win')}`);
-                        this.state = State.End;
-                        this.explodeProjectile();
-                    }
+                    // the other player wins
+                    let msgKey = pId === 0 ? 'game.player_two' : 'game.player_one';
+                    this.hud.displayMessage(`\n${localized(msgKey)}\n\n${localized('game.win')}`);
+                    this.state = State.End;
+                    this.explodeProjectile();
     
                 } else {
                     // hit some space thing
@@ -472,6 +487,10 @@ export default class SpaceScene extends Phaser.Scene {
         // set up the new projectile with particles and stuff
         this.projectile.x = sourceX;
         this.projectile.y = sourceY;
+        // set image position too
+        // to avoid emimitting particles in its last position
+        this.projectile.image.x = sourceX;
+        this.projectile.image.y = sourceY;
         this.projectile.velX = fireX;
         this.projectile.velY = fireY;
         this.projectile.image.setVisible(true);
@@ -485,6 +504,18 @@ export default class SpaceScene extends Phaser.Scene {
         this.gfxTrajectory.clear();
         // play sound
         this.sound.play('bang');
+
+        this.state = State.Projecting;
+
+        // start following the projectile after a few moments
+        setTimeout(() => {
+            if (this.state === State.Projecting && !this.isFollowing) {
+                let cam = this.cameras.main;
+                cam.setDeadzone(this.scale.canvas.width - 100, this.scale.canvas.height - 100);
+                cam.startFollow(this.projectile.image, true, 0.5, 0.5);
+                this.isFollowing = true;
+            }
+        }, 1200);
     }
 
     private explodeProjectile() {
@@ -494,6 +525,9 @@ export default class SpaceScene extends Phaser.Scene {
         this.projectile.prtcHit.setVisible(true);
         this.projectile.prtcHit.resume();
         this.projectile.prtcHit.explode(42, this.projectile.x, this.projectile.y);
+        // stop following the projectile
+        this.cameras.main.stopFollow();
+        this.isFollowing = false;
         setTimeout(() => {
             this.projectile.prtcHit.active = false;
         }, 250);
@@ -504,6 +538,9 @@ export default class SpaceScene extends Phaser.Scene {
         this.projectile.flare.setVisible(false);
         this.projectile.prtcTrail.stop();
         this.projectile.prtcHit.setVisible(false);
+        // stop following the projectile
+        this.cameras.main.stopFollow();
+        this.isFollowing = false;
     }
 }
 
