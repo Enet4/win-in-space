@@ -23,3 +23,5 @@ background-space-universe-galaxy-3907905: Image by [CharlVera](https://pixabay.c
 universe-the-background-image-space-2303321: Image by [rezakk](https://pixabay.com/users/rezakk-261339/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=2303321) from [Pixabay](https://pixabay.com/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=2303321)
 
 HD-Space-Wallpaper-For-Background-11: http://www.technocrazed.com/hd-space-wallpapers-backgrounds-free-download
+
+bang: Adapted from `bang_01` in [25-CC0-bang-firework-sfx](https://opengameart.org/content/25-cc0-bang-firework-sfx)
