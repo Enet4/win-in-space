@@ -6,9 +6,12 @@ const HUD_HEIGHT = 150;
 export default class HudScene extends Phaser.Scene {
 
     private inner: Phaser.GameObjects.Container;
+    private powerPad: Phaser.GameObjects.Container;
     private popMessage: Phaser.GameObjects.Text;
     private messageTimeoutHandler: NodeJS.Timeout | null;
     private fireClickHandler: () => void;
+    private powerUpHandler: () => void;
+    private powerDownHandler: () => void;
     private previousAngle: number | null;
     private previousForce: number | null;
 
@@ -33,6 +36,8 @@ export default class HudScene extends Phaser.Scene {
     public create(data) {
         console.debug(`[HudScene] create`, data);
         this.fireClickHandler = data.onFire;
+        this.powerUpHandler = data.onPowerUp;
+        this.powerDownHandler = data.onPowerDown;
 
         let w = HUD_WIDTH;
         let h = HUD_HEIGHT;
@@ -57,8 +62,23 @@ export default class HudScene extends Phaser.Scene {
     
         ui.setScrollFactor(0, 0);
         ui.setVisible(false);
-        
         this.inner = ui;
+
+        const bStyle = {
+            fontSize: '14pt',
+            fill: '#202020',
+            align: 'center',
+            backgroundColor: '#C0C0C0',
+        };
+ 
+        this.powerPad = this.add.container(0, 0, [
+            this.add.rectangle(0, 0, 32, 100, 0x002277, 0x25),
+            this.createPowerButton(-9, -36, '+', this.powerUpHandler),
+            this.add.text(-8, -2, '«»', {fontSize: '14pt'}),
+            this.createPowerButton(-9, 28, '-', this.powerDownHandler),
+        ]);
+
+        this.powerPad.setPosition(500, 400);
 
         this.popMessage = this.add.text(this.cameras.main.centerX, 64, "«undefined»", {
             fontFamily: 'lemonmilk',
@@ -113,7 +133,11 @@ export default class HudScene extends Phaser.Scene {
         let msgAngle = String(angle);
         if (this.previousAngle !== null) {
             let diff = (angle - this.previousAngle);
-            diff = (diff + 180) % 360 - 180;
+            if (diff > 180) {
+                diff -= 360;
+            } else if (diff < -180) {
+                diff += 360;
+            }
             if (diff !== 0) {
                 msgAngle += ` (${diff})`;
             }
@@ -153,8 +177,32 @@ export default class HudScene extends Phaser.Scene {
         return txt;
     }
 
+    private createPowerButton(x: number, y: number, text: string, onClick: (evt: any) => void) {
+        let txt = this.add.text(x, y, text, {
+            fontSize: '14pt',
+            fill: '#F04499',
+            align: 'center',
+            backgroundColor: '#C0C0C0',
+        });
+        txt.setInteractive();
+        txt.on('pointerdown', (evt) => {
+            txt.setFill("#440000");
+            onClick(evt);
+        });
+        txt.on('pointerup', () => {
+            txt.setFill("#FFF770");
+        });
+        txt.on('pointerover', () => {
+            txt.setFill("#FFF770");
+        });
+        txt.on('pointerout', () => {
+            txt.setFill('#F04499');
+        });
+        return txt;
+    }
+
     private onFire(evt) {
-        console.log("[HudScene] onFire", evt);
+        console.debug("[HudScene] onFire", evt);
         this.fireClickHandler();
     }
 }
