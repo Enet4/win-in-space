@@ -483,6 +483,8 @@ export default class SpaceScene extends Phaser.Scene {
         this.lastTrajectory[this.currentPlayer] = this.trajectoryBuilder.setUp(this.projectile);
         // clear the previous one
         this.gfxTrajectory.clear();
+        // play sound
+        this.sound.play('bang');
     }
 
     private explodeProjectile() {
