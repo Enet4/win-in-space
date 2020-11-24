@@ -194,7 +194,7 @@ export default class SpaceScene extends Phaser.Scene {
         ));
         this.decision = this.lifePlanets.map((planet) => ({
             angle: undefined,
-            force: planet.power,
+            force: 2,
         }));
         this.lastTrajectory = this.lifePlanets.map((_) => null);
         this.trajectoryBuilder = new TrajectoryBuilder();
@@ -311,6 +311,30 @@ export default class SpaceScene extends Phaser.Scene {
             onFire: () => {
                 console.log(`[space] onFireClick callback`);
                 this.onFire();
+            },
+            onPowerUp: () => {
+                if (this.state === State.Playing) {
+                    // update power appropriately
+                    let decision = this.decision[this.currentPlayer];
+                    if (decision.force) {
+                        if (decision.force < this.lifePlanets[this.currentPlayer].power) {
+                            decision.force += 1;
+                            this.hud.setDecision(decision.angle, decision.force);
+                        }
+                    }
+                }
+            },
+            onPowerDown: () => {
+                if (this.state === State.Playing) {
+                    // update power appropriately
+                    let decision = this.decision[this.currentPlayer];
+                    if (decision.force) {
+                        if (decision.force > 1) {
+                            decision.force -= 1;
+                            this.hud.setDecision(decision.angle, decision.force);
+                        }
+                    }
+                }
             },
         });
         this.hud = this.scene.get('HudScene') as HudScene;

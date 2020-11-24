@@ -19,6 +19,9 @@ export function generateLevel(size: number, numPlanets: number, seed?: any): Lev
     let rng = seedrandom(seed, {entropy: true});
     random.use(rng);
 
+    // maximum power based on level size
+    const power = size > 2000 ? 4 : 3;
+
     let wSize = size;
     let hSize = size * 0.8;
     let bounds = {
@@ -40,7 +43,7 @@ export function generateLevel(size: number, numPlanets: number, seed?: any): Lev
             x: -wSize + 600,
             y: planetPosY(),
             size: DEFAULT_LIFE_PLANET_SIZE,
-            power: 2,
+            power,
         },
         // player 2
         {
@@ -48,7 +51,7 @@ export function generateLevel(size: number, numPlanets: number, seed?: any): Lev
             x: wSize - 600,
             y: planetPosY(),
             size: DEFAULT_LIFE_PLANET_SIZE,
-            power: 2,
+            power,
         }
     ];
 

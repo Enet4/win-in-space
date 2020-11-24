@@ -63,22 +63,15 @@ export default class HudScene extends Phaser.Scene {
         ui.setScrollFactor(0, 0);
         ui.setVisible(false);
         this.inner = ui;
-
-        const bStyle = {
-            fontSize: '14pt',
-            fill: '#202020',
-            align: 'center',
-            backgroundColor: '#C0C0C0',
-        };
  
         this.powerPad = this.add.container(0, 0, [
-            this.add.rectangle(0, 0, 32, 100, 0x002277, 0x25),
+            this.add.rectangle(0, 0, 32, 100, 0x002277, 0.25),
             this.createPowerButton(-9, -36, '+', this.powerUpHandler),
             this.add.text(-8, -2, '«»', {fontSize: '14pt'}),
             this.createPowerButton(-9, 28, '-', this.powerDownHandler),
         ]);
 
-        this.powerPad.setPosition(500, 400);
+        this.powerPad.setPosition(264, 64);
 
         this.popMessage = this.add.text(this.cameras.main.centerX, 64, "«undefined»", {
             fontFamily: 'lemonmilk',
@@ -129,27 +122,29 @@ export default class HudScene extends Phaser.Scene {
         }
     }
 
-    public setDecision(angle: number, force?: number) {
-        let msgAngle = String(angle);
-        if (this.previousAngle !== null) {
-            let diff = (angle - this.previousAngle);
-            if (diff > 180) {
-                diff -= 360;
-            } else if (diff < -180) {
-                diff += 360;
+    public setDecision(angle?: number, force?: number) {
+        if (angle !== undefined) {
+            let msgAngle = String(angle);
+            if (this.previousAngle !== null) {
+                let diff = (angle - this.previousAngle);
+                if (diff > 180) {
+                    diff -= 360;
+                } else if (diff < -180) {
+                    diff += 360;
+                }
+                if (diff !== 0) {
+                    msgAngle += ` (${diff})`;
+                }
             }
-            if (diff !== 0) {
-                msgAngle += ` (${diff})`;
-            }
+            (this.inner.getAt(2) as Phaser.GameObjects.Text).text = msgAngle;
         }
-        (this.inner.getAt(2) as Phaser.GameObjects.Text).text = msgAngle;
-
         if (force !== undefined) {
             let msgForce = String(force);
             if (this.previousForce !== null && force !== this.previousForce) {
-                msgAngle += ` (${force - this.previousForce})`;
+                msgForce += ` (${force - this.previousForce})`;
             }
             (this.inner.getAt(4) as Phaser.GameObjects.Text).text = msgForce;
+            (this.powerPad.getAt(2) as Phaser.GameObjects.Text).setText(String(force));
         }
     }
 
@@ -179,7 +174,7 @@ export default class HudScene extends Phaser.Scene {
 
     private createPowerButton(x: number, y: number, text: string, onClick: (evt: any) => void) {
         let txt = this.add.text(x, y, text, {
-            fontSize: '14pt',
+            fontSize: '16pt',
             fill: '#F04499',
             align: 'center',
             backgroundColor: '#C0C0C0',
