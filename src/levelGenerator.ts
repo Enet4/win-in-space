@@ -20,7 +20,7 @@ export function generateLevel(size: number, numPlanets: number, seed?: any): Lev
     random.use(rng);
 
     // maximum power based on level size
-    const power = size > 2000 ? 4 : 3;
+    const power = size > 1800 ? 4 : 3;
 
     let wSize = size;
     let hSize = size * 0.8;
@@ -68,6 +68,7 @@ export function generateLevel(size: number, numPlanets: number, seed?: any): Lev
     let thingRadius = random.exponential(4);
     let thingMassFactor = random.uniform(0.9, 1.1);
     let thingTextureIndex = random.uniformInt(0, TEXTURES_AVAILABLE.length - 1);
+    let thingAntiMatter = random.uniformInt(1, 30);
 
     let things: SpaceThing[] = [];
     for (let i = 0; i < numPlanets; i++) {
@@ -78,6 +79,10 @@ export function generateLevel(size: number, numPlanets: number, seed?: any): Lev
         while (attemptsLeft > 0) {
             let r = 40 + thingRadius() * 100;
             let mass = thingMassFactor() * r * r * 0.1;
+            if (thingAntiMatter() === 1) {
+                // anti-matter thing, repels instead of attracting
+                mass = -mass;
+            }
             nt = {
                 id: `planet${i + 1}`,
                 x: thingPosX(),
