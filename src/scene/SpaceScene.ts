@@ -6,7 +6,7 @@ import SmoothCameraController from '../ext/SmoothCamera';
 import { localized } from '../locale';
 import { PhysicsReactor, newPhysicsReactorFrom } from '../system/ForceReactor';
 import HudScene from './HudScene';
-import {generateLevel} from '../levelGenerator';
+import { generateLevel } from '../levelGenerator';
 import TrajectoryBuilder from '../system/TrajectoryBuilder';
 
 /// The ID of the current player (0 for the first player, 1 for the second player)
@@ -41,11 +41,32 @@ interface SpaceSceneData {
     levelSeed?: any;
 }
 
+export interface Statistics {
+    /// the longest flying time of a projectile
+    longestLiving: number;
+    /// ID of the player that fired the longest flying projectile
+    longestLivingPlayerId: PlayerId | null;
+    /// the round number, where 0 is before the game starts
+    numRound: number;
+}
+
 const BACKGROUNDS = [
     'background-3907905_1920',
     'background-3908098_1920',
     'universe-2303321_1920'
 ];
+
+interface LifePlanetEntity extends LifePlanet {
+    img: Phaser.GameObjects.Image;
+    /// the canon images by player
+    canon: Phaser.GameObjects.Image;
+    /// the nation flags by player
+    flag: Phaser.GameObjects.Image;
+    /// the angle and force by player
+    decision: TurnDecision;
+    /// the paths of the last trajectory, for future rendering
+    lastTrajectory: Phaser.Curves.Path | null;
+}
 
 export default class SpaceScene extends Phaser.Scene {
 
@@ -55,29 +76,23 @@ export default class SpaceScene extends Phaser.Scene {
     private btnEnter: Phaser.Input.Keyboard.Key;
     private cameraControl: SmoothCameraController;
 
-    // -- projectile data & logic --
-    private projectile: Projectile;
-    private reactor: PhysicsReactor;
-
     // -- HUD scene --
     private hud: HudScene;
 
     // -- player data & logic --
     /// the life planets controlled by players
-    private lifePlanets: LifePlanet[];
-    /// the angle and force by player
-    private decision: TurnDecision[];
-    /// the canon images by player
-    private canons: Phaser.GameObjects.Image[];
-    /// the nation flags by player
-    private flags: Phaser.GameObjects.Image[];
+    private lifePlanets: LifePlanetEntity[];
     /// the line represention the angle
     private angleLine: Phaser.GameObjects.Line;
     /// whether the player is angling
     private isAngling: boolean;
 
-    /// the paths of the last trajectory, for future rendering
-    private lastTrajectory: (Phaser.Curves.Path | null)[];
+    // -- projectile data & logic --
+    private projectile: Projectile;
+    private reactor: PhysicsReactor;
+    private projectileCreated: number;
+
+    // graphics object for rendering trajectories
     private gfxTrajectory: Phaser.GameObjects.Graphics;
     private trajectoryBuilder: TrajectoryBuilder;
     /// whether the camera is following the projectile
@@ -87,12 +102,13 @@ export default class SpaceScene extends Phaser.Scene {
     private currentPlayer: PlayerId;
     /// game state
     private state: State;
+    /// game statistics
+    private statistics: Statistics;
+
     /// the game's level (spatial set up)
     private level: Level;
     /// the number of human players
     private numHumans: number;
-    /// the round number, where 0 is before the game starts
-    private numRound: number;
 
     /// the backdrop picked
     private background: string;
@@ -121,7 +137,7 @@ export default class SpaceScene extends Phaser.Scene {
     }
 
     preload() {
-        this.background = BACKGROUNDS[(Math.random() * BACKGROUNDS.length) | 0]; 
+        this.background = BACKGROUNDS[(Math.random() * BACKGROUNDS.length) | 0];
         this.load.image(this.background, `../../assets/images/${this.background}.jpg`);
     }
 
@@ -131,7 +147,7 @@ export default class SpaceScene extends Phaser.Scene {
 
 
         // create the background scene and push it to the back
-        this.scene.launch('BackgroundScene', {background: this.background});
+        this.scene.launch('BackgroundScene', { background: this.background });
         // move it 3 times, because magic
         this.scene.moveDown('BackgroundScene');
         this.scene.moveDown('BackgroundScene');
@@ -149,7 +165,7 @@ export default class SpaceScene extends Phaser.Scene {
                 this.cameras.main.zoomTo(cam.zoom, 750, 'Cubic');
             }
         }
-        
+
         this.cameraControl = new SmoothCameraController(
             this.cameras.main,
             this.input.keyboard.createCursorKeys(),
@@ -168,7 +184,7 @@ export default class SpaceScene extends Phaser.Scene {
             if (pointer.isDown && pointer.button === 1) {
                 console.debug("pointermove w middle button", pointer);
             }
-            
+
         });
 
         this.input.mouse.onMouseWheel((x, y, z) => {
@@ -187,16 +203,6 @@ export default class SpaceScene extends Phaser.Scene {
             this.cameras.main.setViewport(0, 0, data.width, data.height);
         });
 
-        // set up life planets, used by the players
-
-        this.lifePlanets = this.level.lifePlanets.map((p) => (
-            createLifePlanet(p.id, p.x, p.y, p.size, p.mass, p.textureId, p.power)
-        ));
-        this.decision = this.lifePlanets.map((planet) => ({
-            angle: undefined,
-            force: 2,
-        }));
-        this.lastTrajectory = this.lifePlanets.map((_) => null);
         this.trajectoryBuilder = new TrajectoryBuilder();
         this.gfxTrajectory = this.add.graphics({
             lineStyle: {
@@ -206,16 +212,15 @@ export default class SpaceScene extends Phaser.Scene {
             }
         });
 
-        this.canons = [];
-        this.flags = [];
-
         // create angling arrow
         this.angleLine = this.add.line(0, 0, 0, 0, 0, 0, 0xFF0000, 0.75);
         this.angleLine.setVisible(false);
 
-        let index = 0;
-        for (const { id, x, y, size, textureId } of this.lifePlanets) {
-            const planetId = parseInt(id.slice('player'.length)) - 1;
+        // set up life planets, used by the players
+        this.lifePlanets = this.level.lifePlanets.map((p) => {
+            let planet = createLifePlanet(p.id, p.x, p.y, p.size, p.mass, p.textureId, p.power);
+            const {x, y, size, textureId} = planet;
+            const planetId = parseInt(planet.id.slice('player'.length)) - 1;
             let img = this.add.image(x, y, textureId || 'planet_blue');
             img.setInteractive();
             img.setSize(size * 2, size * 2);
@@ -224,30 +229,39 @@ export default class SpaceScene extends Phaser.Scene {
             const canonSize = size * 2.75;
             canon.setSize(canonSize, canonSize);
             canon.setDisplaySize(canonSize, canonSize);
-            this.canons.push(canon);
             // if life planet is mostly to the right,
             // point canon to the other side
             if (x > this.cameras.main.centerX) {
                 canon.setRotation(Math.PI);
             }
 
-            let flagTexture = planetId === 0 ? 'flag-cyan': 'flag-purple';
+            let flagTexture = planetId === 0 ? 'flag-cyan' : 'flag-purple';
             const flag = this.add.image(x, y - 12, flagTexture);
             flag.setDisplaySize(42, 42);
-            this.flags.push(flag);
 
             const hPointerDown = (pointer) => {
                 if (this.state !== State.Playing) return;
                 if (planetId === this.currentPlayer && pointer.button === 0) {
                     this.isAngling = true;
-                    this.angleLine.setTo(this.currentPlanet().x, this.currentPlanet().y, pointer.worldX, pointer.worldY);
+                    this.angleLine.setTo(this.currentPlanet.x, this.currentPlanet.y, pointer.worldX, pointer.worldY);
                     this.angleLine.setVisible(true);
                 }
             };
             canon.addListener('pointerdown', hPointerDown);
             img.addListener('pointerdown', hPointerDown);
-            index += 1;
-        }
+
+            return {
+                ...planet,
+                decision: {
+                    angle: undefined,
+                    force: 2,
+                },
+                lastTrajectory: null,
+                canon,
+                img,
+                flag,
+            }
+        });
 
         let lastX = 0;
         let lastY = 0;
@@ -259,25 +273,25 @@ export default class SpaceScene extends Phaser.Scene {
         });
         this.input.addListener('pointermove', (pointer) => {
             if (this.isAngling) {
-                this.angleLine.setTo(this.currentPlanet().x, this.currentPlanet().y, pointer.worldX, pointer.worldY);
-                let angle = Phaser.Math.Angle.Between(this.currentPlanet().x, this.currentPlanet().y, pointer.worldX, pointer.worldY);
+                this.angleLine.setTo(this.currentPlanet.x, this.currentPlanet.y, pointer.worldX, pointer.worldY);
+                let angle = Phaser.Math.Angle.Between(this.currentPlanet.x, this.currentPlanet.y, pointer.worldX, pointer.worldY);
                 angle = Math.round(angle * 180 / Math.PI);
-                this.canons[this.currentPlayer].setAngle(angle);
+                this.currentPlanet.canon.setAngle(angle);
                 this.hud.setDecision(angle);
             } else if (pointer.isDown && pointer.button === 1) {
                 let relX = pointer.position.x - lastX;
                 let relY = pointer.position.y - lastY;
                 //console.debug("pointermove while middle button is pressed", relX, relY, pointer);
-                // !!!
+                // !!! move camera?
             }
         });
         this.input.addListener('pointerup', (pointer) => {
             if (this.isAngling) {
-                let angle = Phaser.Math.Angle.Between(this.currentPlanet().x, this.currentPlanet().y, pointer.worldX, pointer.worldY);
+                let angle = Phaser.Math.Angle.Between(this.currentPlanet.x, this.currentPlanet.y, pointer.worldX, pointer.worldY);
                 angle = Math.round(angle * 180 / Math.PI);
                 console.debug("Angle fixed at:", angle);
                 // save angle and show it
-                this.decision[this.currentPlayer].angle = angle;
+                this.currentPlanet.decision.angle = angle;
                 this.hud.setDecision(angle);
 
                 this.isAngling = false;
@@ -287,12 +301,16 @@ export default class SpaceScene extends Phaser.Scene {
 
         let planets = this.level.things;
 
-        for (const { x, y, size, textureId } of planets) {
+        for (const { x, y, size, textureId, mass } of planets) {
             let planet = this.add.image(x, y, textureId || 'planet_gamma');
             // size is the radius, get the diameter
             let diameter = size * 2;
             planet.setDisplaySize(diameter, diameter);
             planet.setSize(diameter, diameter);
+            if (mass < 0) {
+                planet.setTint(0xC05555);
+                planet.setRotation(Math.PI);
+            }
         }
 
         // create physics systems
@@ -305,7 +323,11 @@ export default class SpaceScene extends Phaser.Scene {
         this.projectile = createProjectile(this, 0, 0, 0, 0);
         this.disableProjectile();
         this.state = State.Idle;
-        this.numRound = 0;
+        this.statistics = {
+            longestLiving: 0,
+            longestLivingPlayerId: null,
+            numRound: 0,
+        };
 
         this.scene.launch('HudScene', {
             onFire: () => {
@@ -315,7 +337,7 @@ export default class SpaceScene extends Phaser.Scene {
             onPowerUp: () => {
                 if (this.state === State.Playing) {
                     // update power appropriately
-                    let decision = this.decision[this.currentPlayer];
+                    let decision = this.currentPlanet.decision;
                     if (decision.force) {
                         if (decision.force < this.lifePlanets[this.currentPlayer].power) {
                             decision.force += 1;
@@ -327,7 +349,7 @@ export default class SpaceScene extends Phaser.Scene {
             onPowerDown: () => {
                 if (this.state === State.Playing) {
                     // update power appropriately
-                    let decision = this.decision[this.currentPlayer];
+                    let decision = this.currentPlanet.decision;
                     if (decision.force) {
                         if (decision.force > 1) {
                             decision.force -= 1;
@@ -358,18 +380,25 @@ export default class SpaceScene extends Phaser.Scene {
 
                 if (out.collision.startsWith('player')) {
                     let pId = parseInt(out.collision.slice('player'.length)) - 1;
-                        
+
+                    let planet = this.lifePlanets[pId];
                     // explode stuff
                     this.sndChunkyExplosion.play();
-                    // TODO show explosions 'n' stuff
-                    this.cameras.main.shake(250, 0.25);
+                    // TODO show more explosions 'n' stuff
+                    this.cameras.main.shake(280, 0.2);
+                    this.cameras.main.pan(planet.x, planet.y, 500, 'Cubic');
+                    planet.img.setTint(0x222222);
+                    planet.flag.setTintFill(0xFFFFFF);
+                    if (planet.canon) {
+                        planet.canon.setVisible(false);
+                    }
 
                     // the other player wins
                     let msgKey = pId === 0 ? 'game.player_two' : 'game.player_one';
                     this.hud.displayMessage(`\n${localized(msgKey)}\n\n${localized('game.win')}`);
                     this.state = State.End;
                     this.explodeProjectile();
-    
+
                 } else {
                     // hit some space thing
                     this.sndDistantExplosion.play();
@@ -423,12 +452,13 @@ export default class SpaceScene extends Phaser.Scene {
         this.scene.start('MenuScene');
     }
 
-    private isHuman(playerId): boolean {
+    private isHuman(playerId: PlayerId): boolean {
         return playerId < this.numHumans;
     }
 
     private startNextPlayerRound() {
-        this.startPlayerRound((this.currentPlayer + 1) % this.lifePlanets.length);
+        // currently, the number of humans is also the number of actual players
+        this.startPlayerRound((this.currentPlayer + 1) % this.numHumans);
     }
 
     private startPlayerRound(playerId: number) {
@@ -437,9 +467,9 @@ export default class SpaceScene extends Phaser.Scene {
         this.state = State.Playing;
         // Note: player #0 always starts first
         if (playerId === 0) {
-            this.numRound += 1;
+            this.statistics.numRound += 1;
         }
-        console.log(`Round ${this.numRound}: player #${playerId}`);
+        console.log(`Round ${this.statistics.numRound}: player #${playerId}`);
 
         // get player position, pan to it
         let planet = this.lifePlanets[playerId];
@@ -457,28 +487,28 @@ export default class SpaceScene extends Phaser.Scene {
         this.hud.displayMessage(localized(msgKey), 2000);
 
         // show last projectile trajectory if applicable
-        let trajectory = this.lastTrajectory[this.currentPlayer];
+        let trajectory = this.currentPlanet.lastTrajectory;
         if (trajectory) {
             this.gfxTrajectory.clear();
             trajectory.draw(this.gfxTrajectory);
         }
 
         // update decision and show HUD
-        let { angle, force } = this.decision[playerId];
+        let { angle, force } = this.currentPlanet.decision;
         this.hud.setPreviousDecision(angle, force);
         if (typeof angle !== 'number') {
             angle = playerId === 0 ? 0 : 180;
-            this.decision[playerId].angle = angle;
+            this.currentPlanet.decision.angle = angle;
         }
         if (typeof force !== 'number') {
             force = 2;
-            this.decision[playerId].force = 2;
+            this.currentPlanet.decision.force = 2;
         }
         this.hud.setDecision(angle, force);
         this.hud.show();
     }
 
-    private currentPlanet() {
+    private get currentPlanet() {
         return this.lifePlanets[this.currentPlayer];
     }
 
@@ -494,12 +524,12 @@ export default class SpaceScene extends Phaser.Scene {
 
         this.state = State.Projecting;
         // create projectile entity, let it fly
-        let decision = this.decision[this.currentPlayer];
+        let decision = this.currentPlanet.decision;
         if (decision.angle === undefined || decision.force === undefined) {
             console.warn("Angle/Force not yet defined");
             return;
         }
-        let sourcePlanet = this.currentPlanet();
+        let sourcePlanet = this.currentPlanet;
         let ang = Phaser.Math.DegToRad(decision.angle);
         let cosAng = Math.cos(ang);
         let sinAng = Math.sin(ang);
@@ -523,13 +553,14 @@ export default class SpaceScene extends Phaser.Scene {
         this.projectile.prtcTrail.start();
 
         // initiate trajectory path
-        this.lastTrajectory[this.currentPlayer] = this.trajectoryBuilder.setUp(this.projectile);
+        this.currentPlanet.lastTrajectory = this.trajectoryBuilder.setUp(this.projectile);
         // clear the previous one
         this.gfxTrajectory.clear();
         // play sound
         this.sound.play('bang');
 
         this.state = State.Projecting;
+        this.projectileCreated = this.time.now;
 
         // start following the projectile after a few moments
         setTimeout(() => {
@@ -558,6 +589,15 @@ export default class SpaceScene extends Phaser.Scene {
     }
 
     private disableProjectile() {
+        if (this.state === State.Projecting) {
+            // update time statistics
+            let cTime = this.time.now;
+            if (cTime - this.projectileCreated > this.statistics.longestLiving) {
+                this.statistics.longestLiving = cTime - this.projectileCreated;
+                this.statistics.longestLivingPlayerId = this.currentPlayer;
+            }
+        }
+
         this.projectile.image.setVisible(false);
         this.projectile.flare.setVisible(false);
         this.projectile.prtcTrail.stop();
