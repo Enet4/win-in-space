@@ -1,5 +1,5 @@
 /// the number of milliseconds per new point to record
-const MS_PER_POINT = 40;
+const MS_PER_POINT = 30;
 
 export interface Position {
     x: number;
