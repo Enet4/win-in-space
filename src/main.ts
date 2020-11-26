@@ -6,6 +6,7 @@ import SpaceScene from './scene/SpaceScene';
 import HudScene from './scene/HudScene';
 import ReallyQuitScene from './scene/ReallyQuitScene';
 import BackgroundScene from './scene/BackgroundScene';
+import SummaryScene from './scene/SummaryScene';
 
 let game = new Phaser.Game({
     type: Phaser.AUTO,
@@ -43,6 +44,7 @@ let game = new Phaser.Game({
         new HudScene(),
         new ReallyQuitScene(),
         new BackgroundScene(),
+        new SummaryScene(),
     ],
     parent: 'content'
 });
