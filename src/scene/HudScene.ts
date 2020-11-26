@@ -70,6 +70,8 @@ export default class HudScene extends Phaser.Scene {
             this.add.text(-8, -2, '«»', {fontSize: '14pt'}),
             this.createPowerButton(-9, 28, '-', this.powerDownHandler),
         ]);
+        this.powerPad.setScrollFactor(0, 0);
+        this.powerPad.setVisible(false);
 
         this.powerPad.setPosition(264, 64);
 
@@ -102,10 +104,12 @@ export default class HudScene extends Phaser.Scene {
 
     public show() {
         this.inner.setVisible(true);
+        this.powerPad.setVisible(true);
     }
 
     public hide() {
         this.inner.setVisible(false);
+        this.powerPad.setVisible(false);
     }
 
     public isVisible() {
