@@ -51,7 +51,6 @@ class BootScene extends Phaser.Scene {
         this.load.image('flag-purple', 'assets/images/flag-purple.png');
         this.load.image('flag-cyan', 'assets/images/flag-cyan.png');
 
-        this.load.image('tile', 'assets/images/tile.png');
         this.load.image('HD-Space-Wallpaper-For-Background-11', 'assets/images/HD-Space-Wallpaper-For-Background-11.jpg');
 
         // load music and sound effects
