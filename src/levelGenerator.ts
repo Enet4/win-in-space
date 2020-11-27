@@ -20,7 +20,7 @@ export function generateLevel(size: number, numPlanets: number, seed?: any): Lev
     random.use(rng);
 
     // maximum power based on level size
-    const power = size > 1800 ? 4 : 3;
+    const power = size >= 2000 ? 5 : size > 1600 ? 4 : 3;
 
     let wSize = size;
     let hSize = size * 0.8;
@@ -117,5 +117,12 @@ export function generateLevel(size: number, numPlanets: number, seed?: any): Lev
         comment: "Automatically generated",
     };
     console.debug("Generated level:", level);
+    if (process.env.NODE_ENV !== 'production') {
+        let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(level));
+        let dlAnchorElem = document.getElementById('downloadAnchorElem')!;
+        dlAnchorElem.setAttribute("href", dataStr);
+        dlAnchorElem.setAttribute("download", "level.json");
+        dlAnchorElem.click();
+    }
     return level;
 }
