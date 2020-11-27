@@ -95,7 +95,7 @@ class MenuScene extends Phaser.Scene {
             console.debug('Starting a two player game!');
             setTimeout(() => {
                 this.scale.off('resize');
-                this.scene.start('SpaceScene', { players: 2, levelName: 'RANDOM', levelSeed: 'somethingsomething'});
+                this.scene.start('SpaceScene', { players: 2, levelName: 'RANDOM', levelSeed: 'meh'});
             }, 250);
         });
 
