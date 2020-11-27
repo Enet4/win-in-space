@@ -129,7 +129,7 @@ export default class SpaceScene extends Phaser.Scene {
 
         let levelName = data.levelName || 'RANDOM';
         if (levelName === 'RANDOM') {
-            this.level = generateLevel(1800, 4, data.levelSeed);
+            this.level = generateLevel(1900, 4, data.levelSeed);
         } else {
             this.level = require(`../../assets/levels/${levelName}.json`);
         }
@@ -395,9 +395,15 @@ export default class SpaceScene extends Phaser.Scene {
 
                     // the other player wins
                     let msgKey = pId === 0 ? 'game.player_two' : 'game.player_one';
-                    this.hud.displayMessage(`\n${localized(msgKey)}\n\n${localized('game.win')}`);
-                    this.state = State.End;
+                    this.hud.displayMessage(`\n\n\n${localized(msgKey)}\n\n${localized('game.win')}`);
                     this.explodeProjectile();
+                    this.state = State.End;
+
+                    // summary
+                    this.scene.launch('SummaryScene', {
+                        ...this.statistics,
+                        onQuit: this.end.bind(this)
+                    });
 
                 } else {
                     // hit some space thing
@@ -449,6 +455,7 @@ export default class SpaceScene extends Phaser.Scene {
     private end() {
         this.scene.stop('HudScene');
         this.scene.stop('BackgroundScene');
+        this.scene.stop('SummaryScene');
         this.scene.start('MenuScene');
     }
 
@@ -574,6 +581,15 @@ export default class SpaceScene extends Phaser.Scene {
     }
 
     private explodeProjectile() {
+        if (this.state === State.Projecting) {
+            // update time statistics
+            let cTime = this.time.now;
+            if (cTime - this.projectileCreated > this.statistics.longestLiving) {
+                this.statistics.longestLiving = cTime - this.projectileCreated;
+                this.statistics.longestLivingPlayerId = this.currentPlayer;
+            }
+        }
+
         this.projectile.image.setVisible(false);
         this.projectile.flare.setVisible(false);
         this.projectile.prtcTrail.stop();
