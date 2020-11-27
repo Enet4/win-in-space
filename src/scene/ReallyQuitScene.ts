@@ -26,6 +26,7 @@ export default class ReallyQuitScene extends Phaser.Scene {
                     this.scale.canvas.height / 2,
                     localized('game.lose'),
                     {
+                        fontFamily: 'lemonmilk',
                         fontSize: '18pt',
                         fill: '#CF0000',
                         align: 'center',
