@@ -16,6 +16,10 @@ export default class HelpScene extends Phaser.Scene {
     preload() {
         console.debug("MenuScene preload");
         // use this to load assets
+        this.load.image('guide1', 'assets/images/guide1.png');
+        this.load.image('guide2', 'assets/images/guide2.png');
+        this.load.image('guide3', 'assets/images/guide3.png');
+        this.load.image('guide4', 'assets/images/guide4.png');
     }
 
     private createButton(x: number, y: number, text: string, onClick: (event: any) => void) {
@@ -48,12 +52,12 @@ export default class HelpScene extends Phaser.Scene {
     private createMessage(x: number, y: number, text: string) {
         let optionStyle = {
             fill: 'white',
-            align: 'left',
+            align: 'center',
             fontSize: '18pt',
             backgroundColor: '#000040C0',
         };
         let txt = this.add.text(x, y, text, optionStyle);
-        //txt.setOrigin(0.5);
+        txt.setOrigin(0.5);
         return txt;
     }
 
@@ -66,16 +70,30 @@ export default class HelpScene extends Phaser.Scene {
             this.cameras.main.setViewport(0, 0, width, height);
         });
 
+        let {width, height} = this.scale.canvas;
+
         // the help text for start
         let contents = [
-            { y: 100, msgKey: 'help.1'},
-            { y: 200, msgKey: 'help.2'},
-            { y: 300, msgKey: 'help.3'},
-            { y: 400, msgKey: 'help.4'},
+            { x: width / 4, y: 40, msgKey: 'help.1'},
+            { x: 3 * width / 4, y: 40, msgKey: 'help.2'},
+            { x: width / 4, y: 408, msgKey: 'help.3'},
+            { x: 3 * width / 4, y: 408, msgKey: 'help.4'},
         ];
-        contents.map(({y, msgKey}) =>
-            this.createMessage(32, y, localized(msgKey))
+        contents.map(({x, y, msgKey}) =>
+            this.createMessage(x, y, localized(msgKey))
         );
+
+        let guide1 = this.add.image(340, 232, 'guide1');
+        guide1.setScale(0.5, 0.5);
+
+        let guide2 = this.add.image(3 * width / 4, 240, 'guide2');
+        guide2.setScale(0.65, 0.65);
+
+        let guide3 = this.add.image(240, 610, 'guide3');
+        guide3.setScale(0.5, 0.5);
+
+        let guide4 = this.add.image(3 * width / 4, 610, 'guide4');
+        guide4.setScale(0.6, 0.6);
 
         let fnBack = () => {
             this.scale.off('resize');
