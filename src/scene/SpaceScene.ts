@@ -131,7 +131,7 @@ export default class SpaceScene extends Phaser.Scene {
         if (levelName === 'RANDOM') {
             this.level = generateLevel(1900, 4, data.levelSeed);
         } else {
-            this.level = require(`../../assets/levels/${levelName}.json`);
+            this.level = require(`../../data/levels/${levelName}.json`);
         }
         this.numHumans = data.players;
     }

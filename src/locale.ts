@@ -1,7 +1,7 @@
 let currentLanguage = 'en';
 
 const all_messages = {
-    en: require(`../assets/text/en.json`),
+    en: require(`../data/text/en.json`),
 };
 
 export function localized(messageId: string, language: string = currentLanguage): string {

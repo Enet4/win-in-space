@@ -112,8 +112,8 @@ export function generateLevel(size: number, numPlanets: number, seed?: any): Lev
         camera: {
             x: 0,
             y: 0,
-            zoom: 0.8,
-            minZoom: 0.3,
+            zoom: 0.75,
+            minZoom: 0.5,
         },
         comment: "Automatically generated",
     };
