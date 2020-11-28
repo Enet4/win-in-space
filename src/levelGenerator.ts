@@ -63,8 +63,8 @@ export function generateLevel(size: number, numPlanets: number, seed?: any): Lev
         return (diffX + diffY) < (thing.size + anotherThing.size + extraMargin) ** 2;
     }
 
-    let thingPosX = random.uniform(-wSize + 200, wSize - 200);
-    let thingPosY = random.uniform(-hSize + 200, hSize - 200);
+    let thingPosX = random.uniformInt(-wSize + 200, wSize - 200);
+    let thingPosY = random.uniformInt(-hSize + 200, hSize - 200);
     let thingRadius = random.exponential(4);
     let thingMassFactor = random.uniform(0.9, 1.1);
     let thingTextureIndex = random.uniformInt(0, TEXTURES_AVAILABLE.length - 1);
@@ -79,6 +79,7 @@ export function generateLevel(size: number, numPlanets: number, seed?: any): Lev
         while (attemptsLeft > 0) {
             let r = 40 + thingRadius() * 100;
             let mass = thingMassFactor() * r * r * 0.1;
+            
             if (thingAntiMatter() === 1) {
                 // anti-matter thing, repels instead of attracting
                 mass = -mass;
