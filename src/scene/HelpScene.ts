@@ -9,17 +9,26 @@ export default class HelpScene extends Phaser.Scene {
     }
 
     init(data) {
-        // called before preload
-        console.debug("MenuScene init");
     }
 
     preload() {
-        console.debug("MenuScene preload");
-        // use this to load assets
+        let txtLoading = this.add.text(
+            this.scale.canvas.width / 2,
+            this.scale.canvas.height / 2,
+            localized('boot.loading'), {
+                fontFamily: 'lemonmilk',
+                fontSize: '20pt',
+                align: 'center',
+            });
+        txtLoading.setOrigin(0.5);
+
         this.load.image('guide1', 'assets/images/guide1.png');
         this.load.image('guide2', 'assets/images/guide2.png');
         this.load.image('guide3', 'assets/images/guide3.png');
         this.load.image('guide4', 'assets/images/guide4.png');
+        this.load.on('complete', () => {
+            txtLoading.destroy();
+        });
     }
 
     private createButton(x: number, y: number, text: string, onClick: (event: any) => void) {
@@ -103,7 +112,7 @@ export default class HelpScene extends Phaser.Scene {
         this.createButton(
             this.cameras.main.width / 2,
             this.cameras.main.height - 80,
-            localized('help.back'),
+            localized('menu.back'),
             fnBack);
 
         let btnOk = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER, true, true);

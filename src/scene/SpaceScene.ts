@@ -59,7 +59,7 @@ const BACKGROUNDS = [
 interface LifePlanetEntity extends LifePlanet {
     img: Phaser.GameObjects.Image;
     /// the canon images by player
-    canon: Phaser.GameObjects.Image;
+    canon?: Phaser.GameObjects.Image;
     /// the nation flags by player
     flag: Phaser.GameObjects.Image;
     /// the angle and force by player
@@ -138,7 +138,6 @@ export default class SpaceScene extends Phaser.Scene {
 
     preload() {
         this.background = BACKGROUNDS[(Math.random() * BACKGROUNDS.length) | 0];
-        this.load.image(this.background, `../../assets/images/${this.background}.jpg`);
     }
 
     create() {
@@ -218,37 +217,40 @@ export default class SpaceScene extends Phaser.Scene {
 
         // set up life planets, used by the players
         this.lifePlanets = this.level.lifePlanets.map((p) => {
-            let planet = createLifePlanet(p.id, p.x, p.y, p.size, p.mass, p.textureId, p.power);
+            const planet = createLifePlanet(p.id, p.x, p.y, p.size, p.mass, p.textureId, p.power);
             const {x, y, size, textureId} = planet;
-            const planetId = parseInt(planet.id.slice('player'.length)) - 1;
-            let img = this.add.image(x, y, textureId || 'planet_blue');
+            const playerId = parseInt(planet.id.slice('player'.length)) - 1;
+            const img = this.add.image(x, y, textureId || 'planet_blue');
             img.setInteractive();
             img.setSize(size * 2, size * 2);
             img.setDisplaySize(size * 2, size * 2);
-            const canon = this.add.image(x, y, 'canon');
-            const canonSize = size * 2.75;
-            canon.setSize(canonSize, canonSize);
-            canon.setDisplaySize(canonSize, canonSize);
-            // if life planet is mostly to the right,
-            // point canon to the other side
-            if (x > this.cameras.main.centerX) {
-                canon.setRotation(Math.PI);
-            }
-
-            let flagTexture = planetId === 0 ? 'flag-cyan' : 'flag-purple';
+            const flagTexture = playerId === 0 ? 'flag-cyan' : 'flag-purple';
             const flag = this.add.image(x, y - 12, flagTexture);
             flag.setDisplaySize(42, 42);
 
-            const hPointerDown = (pointer) => {
-                if (this.state !== State.Playing) return;
-                if (planetId === this.currentPlayer && pointer.button === 0) {
-                    this.isAngling = true;
-                    this.angleLine.setTo(this.currentPlanet.x, this.currentPlanet.y, pointer.worldX, pointer.worldY);
-                    this.angleLine.setVisible(true);
+            let canon: undefined | Phaser.GameObjects.Image;
+            if (this.isHuman(playerId)) {
+                canon = this.add.image(x, y, 'canon');
+                const canonSize = size * 2.75;
+                canon.setSize(canonSize, canonSize);
+                canon.setDisplaySize(canonSize, canonSize);
+                // if life planet is mostly to the right,
+                // point canon to the other side
+                if (x > this.cameras.main.centerX) {
+                    canon.setRotation(Math.PI);
                 }
-            };
-            canon.addListener('pointerdown', hPointerDown);
-            img.addListener('pointerdown', hPointerDown);
+
+                const hPointerDown = (pointer) => {
+                    if (this.state !== State.Playing) return;
+                    if (playerId === this.currentPlayer && pointer.button === 0) {
+                        this.isAngling = true;
+                        this.angleLine.setTo(this.currentPlanet.x, this.currentPlanet.y, pointer.worldX, pointer.worldY);
+                        this.angleLine.setVisible(true);
+                    }
+                };
+                canon.addListener('pointerdown', hPointerDown);
+                img.addListener('pointerdown', hPointerDown);
+            }
 
             return {
                 ...planet,
@@ -276,7 +278,7 @@ export default class SpaceScene extends Phaser.Scene {
                 this.angleLine.setTo(this.currentPlanet.x, this.currentPlanet.y, pointer.worldX, pointer.worldY);
                 let angle = Phaser.Math.Angle.Between(this.currentPlanet.x, this.currentPlanet.y, pointer.worldX, pointer.worldY);
                 angle = Math.round(angle * 180 / Math.PI);
-                this.currentPlanet.canon.setAngle(angle);
+                this.currentPlanet.canon!.setAngle(angle);
                 this.hud.setDecision(angle);
             } else if (pointer.isDown && pointer.button === 1) {
                 let relX = pointer.position.x - lastX;
@@ -308,7 +310,7 @@ export default class SpaceScene extends Phaser.Scene {
             planet.setDisplaySize(diameter, diameter);
             planet.setSize(diameter, diameter);
             if (mass < 0) {
-                planet.setTint(0xC05555);
+                planet.setTint(0xDF4F5F);
                 planet.setRotation(Math.PI);
             }
         }

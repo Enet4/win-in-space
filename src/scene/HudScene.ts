@@ -1,6 +1,6 @@
 import { localized } from "../locale";
 
-const HUD_WIDTH = 250;
+const HUD_WIDTH = 260;
 const HUD_HEIGHT = 150;
 
 export default class HudScene extends Phaser.Scene {
@@ -73,7 +73,7 @@ export default class HudScene extends Phaser.Scene {
         this.powerPad.setScrollFactor(0, 0);
         this.powerPad.setVisible(false);
 
-        this.powerPad.setPosition(264, 64);
+        this.powerPad.setPosition(274, 64);
 
         this.popMessage = this.add.text(this.cameras.main.centerX, 64, "«undefined»", {
             fontFamily: 'lemonmilk',
@@ -136,7 +136,9 @@ export default class HudScene extends Phaser.Scene {
                 } else if (diff < -180) {
                     diff += 360;
                 }
-                if (diff !== 0) {
+                if (diff > 0) {
+                    msgAngle += ` (+${diff})`;
+                } else  if (diff < 0) {
                     msgAngle += ` (${diff})`;
                 }
             }

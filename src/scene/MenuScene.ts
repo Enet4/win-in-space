@@ -84,19 +84,13 @@ class MenuScene extends Phaser.Scene {
 
         // the text for start
         let btn1 = this.createButton(centerX, centerY - 80, localized('menu.one_player'), (_ev) => {
-            console.debug('Starting a one player game!');
-            setTimeout(() => {
-                this.scale.off('resize');
-                this.scene.start('SpaceScene', { players: 1, levelName: '0' });
-            }, 250);
+            this.scale.off('resize');
+            this.scene.start('LevelSelectScene', { players: 1 });
         });
 
         let btn2 = this.createButton(centerX, centerY + 40, localized('menu.two_players'), (_ev) => {
-            console.debug('Starting a two player game!');
-            setTimeout(() => {
-                this.scale.off('resize');
-                this.scene.start('SpaceScene', { players: 2, levelName: 'RANDOM', levelSeed: 'meh'});
-            }, 250);
+            this.scale.off('resize');
+            this.scene.start('LevelSelectScene', { players: 2 });
         });
 
         let btn3 = this.createButton(centerX, centerY + 160, localized('menu.help'), (_ev) => {

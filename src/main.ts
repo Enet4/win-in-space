@@ -7,6 +7,8 @@ import HudScene from './scene/HudScene';
 import ReallyQuitScene from './scene/ReallyQuitScene';
 import BackgroundScene from './scene/BackgroundScene';
 import SummaryScene from './scene/SummaryScene';
+import LevelSelectScene from './scene/LevelSelectScene';
+import storeFacade from './storeFacade';
 
 let game = new Phaser.Game({
     type: Phaser.AUTO,
@@ -40,6 +42,7 @@ let game = new Phaser.Game({
         new BootScene(),
         new MenuScene(),
         new HelpScene(),
+        new LevelSelectScene(),
         new SpaceScene(),
         new HudScene(),
         new ReallyQuitScene(),
@@ -58,7 +61,7 @@ game.scale.on('resize', (data) => {
 }
 
 function initMusicConfig() {
-    let musicEnabled = localStorage.getItem("musicEnabled");
+    let musicEnabled = storeFacade.getItem("musicEnabled");
     if (musicEnabled === null) {
         musicEnabled = "true";
     }
@@ -73,7 +76,7 @@ function initMusicConfig() {
         aToggleMusic.innerText = "Disable music";
     }
 
-    localStorage.setItem("musicEnabled", musicEnabled);
+    storeFacade.setItem("musicEnabled", musicEnabled);
 }
 
 initMusicConfig();
@@ -84,7 +87,7 @@ function toggleMusic() {
         console.error("Missing toggle music text");
         return;
     }
-    let musicEnabled = localStorage.getItem("musicEnabled") === "false";
+    let musicEnabled = storeFacade.getItem("musicEnabled") === "false";
     if (!musicEnabled) {
         game.sound.stopByKey('win-in-space');
         aToggleMusic.innerText = "Enable music";
@@ -92,7 +95,7 @@ function toggleMusic() {
         aToggleMusic.innerText = "Disable music";
         game.sound.play('win-in-space', {loop: true, volume: 0.7});
     }
-    localStorage.setItem("musicEnabled", musicEnabled.toString());
+    storeFacade.setItem("musicEnabled", musicEnabled.toString());
 }
 
 /// global export

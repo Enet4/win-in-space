@@ -13,7 +13,6 @@ export default class SummaryScene extends Phaser.Scene {
         console.debug(`[SummaryScene] create`, data);
 
         let labelStyle = {
-            fontFamily: 'lemonmilk',
             fontSize: '14pt',
             align: 'center',
             fill: '#C0C0C0',
