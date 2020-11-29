@@ -2,7 +2,7 @@
 
 A turn-based game still in development.
 
-[See the game on itch.io.](https://e-net4.itch.io/)
+[See the game on itch.io.](https://e-net4.itch.io/win-in-space)
 
 ## Technical Information
 
@@ -26,6 +26,8 @@ To package the game for deployment:
 ```
 npm run deploy
 ```
+
+The contents will be in the folder "build/".
 
 ## Licensing and Attribution
 
