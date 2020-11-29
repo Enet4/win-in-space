@@ -22,7 +22,7 @@ export function createProjectile(scene: Phaser.Scene, x: number, y: number, velX
     let prtcTrail = particlesTrail.createEmitter({
         follow: image,
         frequency: 20,
-        lifespan: 2500,
+        lifespan: 2000,
         alpha: 0.75,
     });
     prtcTrail.stop();
