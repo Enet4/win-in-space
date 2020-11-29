@@ -1,6 +1,6 @@
 {
   "name": "win-in-space",
-  "version": "0.1.0",
+  "version": "1.0.0-alpha.0",
   "private": true,
   "author": "Eduardo Pinho <enet4mikeenet@gmail.com>",
   "description": "Game Off 2020 participation",
@@ -36,7 +36,7 @@
     "expose-loader": "^1.0.3",
     "html-webpack-plugin": "^4.5.0",
     "raw-loader": "^4.0.0",
-    "webpack": "^5.8.0",
+    "webpack": "^5.9.0",
     "webpack-cli": "^4.2.0"
   }
 }
