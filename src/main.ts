@@ -18,6 +18,10 @@ let game = new Phaser.Game({
         mode: Phaser.Scale.RESIZE,
         autoCenter: Phaser.Scale.CENTER_BOTH,
     },
+    fps: {
+        target: 60,
+        min: 40,
+    },
     zoom: 0.005,
     render: {
         pixelArt: false,
@@ -49,7 +53,8 @@ let game = new Phaser.Game({
         new BackgroundScene(),
         new SummaryScene(),
     ],
-    parent: 'content'
+    parent: 'content',
+    version: require('../package.json').version,
 });
 
 game.scale.on('resize', (data) => {
