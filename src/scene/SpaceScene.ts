@@ -376,10 +376,14 @@ export default class SpaceScene extends Phaser.Scene {
     }
 
     update(_timeElapsed: number, delta: number) {
-        //console.log("update delta=%s", delta)
         this.cameraControl.update(delta);
 
-        this.updateProjectile(delta);
+        // increased rate for better accuracy
+        const fracDelta = delta * 0.25;
+        this.updateProjectile(fracDelta);
+        this.updateProjectile(fracDelta);
+        this.updateProjectile(fracDelta);
+        this.updateProjectile(fracDelta);
     }
 
     updateProjectile(delta: number) {
