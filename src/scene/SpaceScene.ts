@@ -366,6 +366,7 @@ export default class SpaceScene extends Phaser.Scene {
             },
         });
         this.hud = this.scene.get('HudScene') as HudScene;
+        this.hud.resetPreviousDecision()
 
         // begin the game in a moment
         setTimeout(() => {
@@ -378,68 +379,74 @@ export default class SpaceScene extends Phaser.Scene {
         //console.log("update delta=%s", delta)
         this.cameraControl.update(delta);
 
-        if (this.state === State.Projecting && this.projectile.image.visible) {
-            let out = this.reactor.apply(delta, this.projectile);
+        this.updateProjectile(delta);
+    }
 
-            if (out.collision) {
-                // interpret the kind of collision
-
-                if (out.collision.startsWith('player')) {
-                    let pId = parseInt(out.collision.slice('player'.length)) - 1;
-
-                    let planet = this.lifePlanets[pId];
-                    // explode stuff
-                    this.sndChunkyExplosion.play();
-                    // TODO show more explosions 'n' stuff
-                    this.cameras.main.shake(280, 0.2);
-                    this.cameras.main.pan(planet.x, planet.y, 500, 'Cubic');
-                    planet.img.setTint(0x222222);
-                    planet.flag.setTintFill(0xFFFFFF);
-                    if (planet.canon) {
-                        planet.canon.setVisible(false);
-                    }
-
-                    if (pId === this.currentPlayer) {
-                        // humiliation
-                        this.statistics.selfDestruct = true;
-                    }
-
-                    if (pId === 0 && this.numHumans === 1) {
-                        // you lose
-                        this.hud.displayMessage(`\n\n\n${localized('game.lose')}`, 'red');
-                    } else {
-                        // the other player wins
-                        let msgKey = pId === 0 ? 'game.player_two' : 'game.player_one';
-                        this.hud.displayMessage(`\n\n\n${localized(msgKey)}\n\n${localized('game.win')}`);
-                    }
-
-                    this.explodeProjectile();
-                    this.state = State.End;
-
-                    // summary
-                    this.scene.launch('SummaryScene', {
-                        ...this.statistics,
-                        onQuit: this.end.bind(this)
-                    });
-
-                } else {
-                    // hit some space thing
-                    this.sndDistantExplosion.play();
-                    this.explodeProjectile();
-                    this.state = State.Idle;
-                    setTimeout(() => this.startNextPlayerRound(), 1000);
-                }
-            }
-
-            if (out.outOfBounds) {
-                // missed
-                this.disableProjectile();
-                this.state = State.Idle;
-                setTimeout(this.startNextPlayerRound.bind(this), 1000);
-            }
-
-            this.trajectoryBuilder.update(delta, this.projectile);
+    updateProjectile(delta: number) {
+        if (this.state !== State.Projecting || !this.projectile.image.visible) {
+            return;
         }
+        
+        let out = this.reactor.apply(delta, this.projectile);
+
+        if (out.collision) {
+            // interpret the kind of collision
+
+            if (out.collision.startsWith('player')) {
+                let pId = parseInt(out.collision.slice('player'.length)) - 1;
+
+                let planet = this.lifePlanets[pId];
+                // explode stuff
+                this.sndChunkyExplosion.play();
+                // TODO show more explosions 'n' stuff
+                this.cameras.main.shake(280, 0.2);
+                this.cameras.main.pan(planet.x, planet.y, 500, 'Cubic');
+                planet.img.setTint(0x222222);
+                planet.flag.setTintFill(0xFFFFFF);
+                if (planet.canon) {
+                    planet.canon.setVisible(false);
+                }
+
+                if (pId === this.currentPlayer) {
+                    // humiliation
+                    this.statistics.selfDestruct = true;
+                }
+
+                if (pId === 0 && this.numHumans === 1) {
+                    // you lose
+                    this.hud.displayMessage(`\n\n\n${localized('game.lose')}`, 'red');
+                } else {
+                    // the other player wins
+                    let msgKey = pId === 0 ? 'game.player_two' : 'game.player_one';
+                    this.hud.displayMessage(`\n\n\n${localized(msgKey)}\n\n${localized('game.win')}`);
+                }
+
+                this.explodeProjectile();
+                this.state = State.End;
+
+                // summary
+                this.scene.launch('SummaryScene', {
+                    ...this.statistics,
+                    onQuit: this.end.bind(this)
+                });
+
+            } else {
+                // hit some space thing
+                this.sndDistantExplosion.play();
+                this.explodeProjectile();
+                this.state = State.Idle;
+                setTimeout(() => this.startNextPlayerRound(), 1000);
+            }
+        }
+
+        if (out.outOfBounds) {
+            // missed
+            this.disableProjectile();
+            this.state = State.Idle;
+            setTimeout(this.startNextPlayerRound.bind(this), 1000);
+        }
+
+        this.trajectoryBuilder.update(delta, this.projectile);
     }
 
     onMainButtonDown(e) {

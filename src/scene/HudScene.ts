@@ -128,6 +128,11 @@ export default class HudScene extends Phaser.Scene {
         }
     }
 
+    public resetPreviousDecision() {
+        this.previousAngle = null;
+        this.previousForce = null;
+    }
+
     public setDecision(angle?: number, force?: number) {
         if (angle !== undefined) {
             let msgAngle = String(angle);
