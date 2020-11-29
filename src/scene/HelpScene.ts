@@ -62,6 +62,7 @@ export default class HelpScene extends Phaser.Scene {
         let optionStyle = {
             fill: 'white',
             align: 'center',
+            fontFamily: 'lemonmilk',
             fontSize: '18pt',
             backgroundColor: '#000040C0',
         };
@@ -92,17 +93,17 @@ export default class HelpScene extends Phaser.Scene {
             this.createMessage(x, y, localized(msgKey))
         );
 
-        let guide1 = this.add.image(340, 232, 'guide1');
-        guide1.setScale(0.5, 0.5);
+        let guide1 = this.add.image(width / 4, 232, 'guide1');
+        guide1.setDisplaySize(width * 0.46, width * 0.15)
 
         let guide2 = this.add.image(3 * width / 4, 240, 'guide2');
         guide2.setScale(0.65, 0.65);
 
-        let guide3 = this.add.image(240, 610, 'guide3');
+        let guide3 = this.add.image(240, 600, 'guide3');
         guide3.setScale(0.5, 0.5);
 
-        let guide4 = this.add.image(3 * width / 4, 610, 'guide4');
-        guide4.setScale(0.6, 0.6);
+        let guide4 = this.add.image(3 * width / 4, 600, 'guide4');
+        guide4.setScale(0.64, 0.64);
 
         let fnBack = () => {
             this.scale.off('resize');
