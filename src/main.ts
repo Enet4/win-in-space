@@ -60,7 +60,7 @@ game.scale.on('resize', (data) => {
     e.preventDefault();
 }
 
-function initMusicConfig() {
+function initSndConfig() {
     let musicEnabled = storeFacade.getItem("musicEnabled");
     if (musicEnabled === null) {
         musicEnabled = "true";
@@ -76,10 +76,25 @@ function initMusicConfig() {
         aToggleMusic.innerText = "Disable music";
     }
 
-    storeFacade.setItem("musicEnabled", musicEnabled);
+    let soundEnabled = storeFacade.getItem("soundEnabled");
+    if (soundEnabled === null) {
+        soundEnabled = "true";
+    }
+    let aToggleSnd = document.getElementById("a-toggle-sound");
+    if (!aToggleSnd) {
+        console.error("Missing toggle sound text");
+        return;
+    }
+    if (soundEnabled === "false") {
+        aToggleSnd.innerText = "Enable all sound";
+    } else {
+        aToggleSnd.innerText = "Disable all sound";
+    }
+
+    storeFacade.setItem("soundEnabled", soundEnabled);
 }
 
-initMusicConfig();
+initSndConfig();
 
 function toggleMusic() {
     let aToggleMusic = document.getElementById("a-toggle-music");
@@ -98,5 +113,23 @@ function toggleMusic() {
     storeFacade.setItem("musicEnabled", musicEnabled.toString());
 }
 
-/// global export
+function toggleSound() {
+    let aToggleSnd = document.getElementById("a-toggle-sound");
+    if (!aToggleSnd) {
+        console.error("Missing toggle sound text");
+        return;
+    }
+    let soundEnabled = storeFacade.getItem("soundEnabled") === "false";
+    if (!soundEnabled) {
+        game.sound.mute = true;
+        aToggleSnd.innerText = "Enable all sound";
+    } else {
+        game.sound.mute = false;
+        aToggleSnd.innerText = "Disable all sound";
+    }
+    storeFacade.setItem("soundEnabled", soundEnabled.toString());
+}
+
+// global exports
 window["toggleMusic"] = toggleMusic;
+window["toggleSound"] = toggleSound;
