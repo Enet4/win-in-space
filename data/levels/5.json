@@ -1,0 +1,113 @@
+{
+    "comment": "Scattered",
+    "bounds": {
+        "left": -1800,
+        "top": -1600,
+        "right": 1800,
+        "bottom": 1600
+    },
+    "lifePlanets": [
+        {
+            "id": "player1",
+            "x": -1200,
+            "y": 0,
+            "size": 64,
+            "power": 3
+        },
+        {
+            "id": "player2",
+            "x": 1200,
+            "y": 0,
+            "size": 64,
+            "power": 3
+        }
+    ],
+    "things": [
+        {
+            "id": "planet1",
+            "x": 0,
+            "y": -999,
+            "size": 130,
+            "mass": 410,
+            "textureId": "planet_neptune"
+        },
+        {
+            "id": "planet2",
+            "x": 388,
+            "y": 249,
+            "size": 38,
+            "mass": 20,
+            "textureId": "Dysnomia_moon"
+        },
+        {
+            "id": "planet3",
+            "x": 480,
+            "y": 857,
+            "size": 46,
+            "mass": 60,
+            "textureId": "planet_gamma"
+        },
+        {
+            "id": "planet4",
+            "x": -11,
+            "y": 19,
+            "size": 55,
+            "mass": 90,
+            "textureId": "planet_gamma"
+        },
+        {
+            "id": "planet5",
+            "x": -400,
+            "y": 280,
+            "size": 36,
+            "mass": 32,
+            "textureId": "Dysnomia_moon"
+        },
+        {
+            "id": "planet6",
+            "x": 198,
+            "y": -199,
+            "size": 36,
+            "mass": 32,
+            "textureId": "Dysnomia_moon"
+        },
+        {
+            "id": "planet7",
+            "x": -482,
+            "y": -520,
+            "size": 36,
+            "mass": 32,
+            "textureId": "Dysnomia_moon"
+        },
+        {
+            "id": "planet8",
+            "x": 90,
+            "y": -500,
+            "size": 36,
+            "mass": 32,
+            "textureId": "Dysnomia_moon"
+        },
+        {
+            "id": "planet9",
+            "x": -600,
+            "y": 600,
+            "size": 36,
+            "mass": 32,
+            "textureId": "Dysnomia_moon"
+        },
+        {
+            "id": "planet10",
+            "x": 500,
+            "y": 570,
+            "size": 36,
+            "mass": 32,
+            "textureId": "Dysnomia_moon"
+        }
+    ],
+    "camera": {
+        "x": 0,
+        "y": 0,
+        "zoom": 0.75,
+        "minZoom": 0.6
+    }
+}

@@ -65,15 +65,15 @@ export default class HudScene extends Phaser.Scene {
         this.inner = ui;
  
         this.powerPad = this.add.container(0, 0, [
-            this.add.rectangle(0, 0, 32, 100, 0x002277, 0.25),
-            this.createPowerButton(-9, -36, '+', this.powerUpHandler),
-            this.add.text(-8, -2, '«»', {fontSize: '14pt'}),
-            this.createPowerButton(-9, 28, '-', this.powerDownHandler),
+            this.add.rectangle(0, 0, 32, 110, 0x002277, 0.25),
+            this.createPowerButton(-9, -40, '+', this.powerUpHandler),
+            this.add.text(-8, -4, '«»', {fontSize: '14pt'}),
+            this.createPowerButton(-9, 26, '-', this.powerDownHandler),
         ]);
         this.powerPad.setScrollFactor(0, 0);
         this.powerPad.setVisible(false);
 
-        this.powerPad.setPosition(274, 64);
+        this.powerPad.setPosition(278, 64);
 
         this.popMessage = this.add.text(this.cameras.main.centerX, 64, "«undefined»", {
             fontFamily: 'lemonmilk',
@@ -85,9 +85,11 @@ export default class HudScene extends Phaser.Scene {
         this.popMessage.setVisible(false);
     }
     
-    public displayMessage(message: string, duration?: number) {
+    public displayMessage(message: string, fontColor?: string, duration?: number) {
         this.popMessage.setText(message);
         this.popMessage.setVisible(true);
+        fontColor = fontColor || 'white';
+        this.popMessage.setColor(fontColor);
         if (duration) {
             if (this.messageTimeoutHandler) {
                 clearTimeout(this.messageTimeoutHandler);
@@ -146,8 +148,13 @@ export default class HudScene extends Phaser.Scene {
         }
         if (force !== undefined) {
             let msgForce = String(force);
-            if (this.previousForce !== null && force !== this.previousForce) {
-                msgForce += ` (${force - this.previousForce})`;
+            if (this.previousForce !== null) {
+                let forceDiff = force - this.previousForce;
+                if (force > this.previousForce) {
+                    msgForce += ` (+${forceDiff})`;
+                } else if (force < this.previousForce) {
+                    msgForce += ` (${forceDiff})`;
+                }
             }
             (this.inner.getAt(4) as Phaser.GameObjects.Text).text = msgForce;
             (this.powerPad.getAt(2) as Phaser.GameObjects.Text).setText(String(force));

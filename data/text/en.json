@@ -19,6 +19,8 @@
     "game.summary.rounds": "Number of rounds",
     "game.summary.longlife_projectile": "Longest projectile time",
     "game.summary.longlife_projectile.by": "by",
+    "game.summary.force_final_shot": "Final shot force",
+    "game.summary.green": "Now that's a green one!",
     "game.exit": "Exit",
     "game.lose": "You do not win",
     "game.really_quit": "Do you really want to quit this game?",

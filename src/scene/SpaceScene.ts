@@ -48,6 +48,10 @@ export interface Statistics {
     longestLivingPlayerId: PlayerId | null;
     /// the round number, where 0 is before the game starts
     numRound: number;
+    /// the force applied in the final shot
+    powerLastShot?: number;
+    /// whether the shot destroyed the shooter
+    selfDestruct?: boolean;
 }
 
 const BACKGROUNDS = [
@@ -129,7 +133,7 @@ export default class SpaceScene extends Phaser.Scene {
 
         let levelName = data.levelName || 'RANDOM';
         if (levelName === 'RANDOM') {
-            this.level = generateLevel(1900, 4, data.levelSeed);
+            this.level = generateLevel(1800, 4, data.levelSeed);
         } else {
             this.level = require(`../../data/levels/${levelName}.json`);
         }
@@ -395,9 +399,20 @@ export default class SpaceScene extends Phaser.Scene {
                         planet.canon.setVisible(false);
                     }
 
-                    // the other player wins
-                    let msgKey = pId === 0 ? 'game.player_two' : 'game.player_one';
-                    this.hud.displayMessage(`\n\n\n${localized(msgKey)}\n\n${localized('game.win')}`);
+                    if (pId === this.currentPlayer) {
+                        // humiliation
+                        this.statistics.selfDestruct = true;
+                    }
+
+                    if (pId === 0 && this.numHumans === 1) {
+                        // you lose
+                        this.hud.displayMessage(`\n\n\n${localized('game.lose')}`, 'red');
+                    } else {
+                        // the other player wins
+                        let msgKey = pId === 0 ? 'game.player_two' : 'game.player_one';
+                        this.hud.displayMessage(`\n\n\n${localized(msgKey)}\n\n${localized('game.win')}`);
+                    }
+
                     this.explodeProjectile();
                     this.state = State.End;
 
@@ -493,7 +508,7 @@ export default class SpaceScene extends Phaser.Scene {
         // exhibit temporary message indicating player start
         let msgKey = playerId === 0 ? 'game.player_one' : 'game.player_two';
 
-        this.hud.displayMessage(localized(msgKey), 2000);
+        this.hud.displayMessage(localized(msgKey), undefined, 2000);
 
         // show last projectile trajectory if applicable
         let trajectory = this.currentPlanet.lastTrajectory;
@@ -529,7 +544,7 @@ export default class SpaceScene extends Phaser.Scene {
         }
 
         // constant canon force factor
-        const F = 0.75;
+        const F = 0.78;
 
         this.state = State.Projecting;
         // create projectile entity, let it fly
@@ -538,14 +553,16 @@ export default class SpaceScene extends Phaser.Scene {
             console.warn("Angle/Force not yet defined");
             return;
         }
+        // tweak least power shot
+        let force = Math.max(decision.force, 1.12);
         let sourcePlanet = this.currentPlanet;
         let ang = Phaser.Math.DegToRad(decision.angle);
         let cosAng = Math.cos(ang);
         let sinAng = Math.sin(ang);
         let sourceX = sourcePlanet.x + (sourcePlanet.size + 4) * cosAng;
         let sourceY = sourcePlanet.y + (sourcePlanet.size + 4) * sinAng;
-        let fireX = cosAng * decision.force * F;
-        let fireY = sinAng * decision.force * F;
+        let fireX = cosAng * force * F;
+        let fireY = sinAng * force * F;
 
         // set up the new projectile with particles and stuff
         this.projectile.x = sourceX;
@@ -568,6 +585,7 @@ export default class SpaceScene extends Phaser.Scene {
         // play sound
         this.sound.play('bang');
 
+        this.statistics.powerLastShot = decision.force;
         this.state = State.Projecting;
         this.projectileCreated = this.time.now;
 

@@ -1,7 +1,7 @@
 {
     "comment": "The very first level.",
     "bounds": {
-        "left": -550,
+        "left": -580,
         "top": -900,
         "right": 1580,
         "bottom": 950
@@ -16,14 +16,14 @@
     "lifePlanets": [
         {
             "id": "player1",
-            "x": 0,
-            "y": 0,
+            "x": -80,
+            "y": 10,
             "power": 2
         },
         {
             "id": "player2",
             "x": 1240,
-            "y": -280,
+            "y": -190,
             "power": 2
         }
     ],
@@ -31,18 +31,18 @@
         {
             "id": "planet1",
             "textureId": "planet_gamma",
-            "x": 475,
-            "y": -430,
-            "size": 150,
-            "mass": 190
+            "x": 350,
+            "y": -380,
+            "size": 100,
+            "mass": 180
         },
         {
             "id": "planet2",
             "textureId": "planet_neptune",
-            "x": 650,
+            "x": 680,
             "y": 300,
-            "size": 68,
-            "mass": 76
+            "size": 66,
+            "mass": 110
         }
     ]
 }

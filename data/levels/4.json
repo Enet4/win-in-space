@@ -1,0 +1,73 @@
+{
+    "comment": "Two large forces combined",
+    "bounds": {
+        "left": -1700,
+        "top": -1300,
+        "right": 1700,
+        "bottom": 1300
+    },
+    "lifePlanets": [
+        {
+            "id": "player1",
+            "x": -1276,
+            "y": 700,
+            "size": 64,
+            "power": 4
+        },
+        {
+            "id": "player2",
+            "x": 1276,
+            "y": -700,
+            "size": 64,
+            "power": 4
+        }
+    ],
+    "things": [
+        {
+            "id": "planet1",
+            "x": 0,
+            "y": -450,
+            "size": 100,
+            "mass": 760,
+            "textureId": "Dysnomia_moon"
+        },
+        {
+            "id": "planet2",
+            "x": 0,
+            "y": 450,
+            "size": 100,
+            "mass": 760,
+            "textureId": "Dysnomia_moon"
+        },
+        {
+            "id": "planet3",
+            "x": -880,
+            "y": -634,
+            "size": 57,
+            "mass": 155,
+            "textureId": "planet_gamma"
+        },
+        {
+            "id": "planet4",
+            "x": 880,
+            "y": 634,
+            "size": 57,
+            "mass": 155,
+            "textureId": "planet_gamma"
+        },
+        {
+            "id": "planet5",
+            "x": 0,
+            "y": 0,
+            "size": 44,
+            "mass": 64,
+            "textureId": "planet_neptune"
+        }
+    ],
+    "camera": {
+        "x": 0,
+        "y": 0,
+        "zoom": 0.58,
+        "minZoom": 0.52
+    }
+}

@@ -1,0 +1,73 @@
+{
+    "comment": "Space-huge",
+    "bounds": {
+        "left": -2495,
+        "top": -1871,
+        "right": 2495,
+        "bottom": 1871
+    },
+    "lifePlanets": [
+        {
+            "id": "player1",
+            "x": -1895,
+            "y": -300,
+            "size": 64,
+            "power": 5
+        },
+        {
+            "id": "player2",
+            "x": 1895,
+            "y": 300,
+            "size": 64,
+            "power": 5
+        }
+    ],
+    "things": [
+        {
+            "id": "planet1",
+            "x": -680,
+            "y": -740,
+            "size": 44,
+            "mass": 152,
+            "textureId": "planet_gamma"
+        },
+        {
+            "id": "planet2",
+            "x": -200,
+            "y": -39,
+            "size": 40,
+            "mass": 132,
+            "textureId": "Dysnomia_moon"
+        },
+        {
+            "id": "planet3",
+            "x": 290,
+            "y": 1210,
+            "size": 86,
+            "mass": 800,
+            "textureId": "planet_gamma"
+        },
+        {
+            "id": "planet4",
+            "x": 260,
+            "y": -1154,
+            "size": 46,
+            "mass": 157,
+            "textureId": "planet_neptune"
+        },
+        {
+            "id": "planet5",
+            "x": -260,
+            "y": 646,
+            "size": 41,
+            "mass": 144,
+            "textureId": "planet_gamma"
+        }
+    ],
+    "camera": {
+        "x": 0,
+        "y": 0,
+        "zoom": 0.48,
+        "minZoom": 0.38
+    }
+}

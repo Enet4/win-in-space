@@ -9,15 +9,15 @@
     "lifePlanets": [
         {
             "id": "player1",
-            "x": -1300,
-            "y": 33,
+            "x": -1400,
+            "y": 0,
             "size": 64,
             "power": 4
         },
         {
             "id": "player2",
-            "x": 1300,
-            "y": -33,
+            "x": 1400,
+            "y": 0,
             "size": 64,
             "power": 4
         }
@@ -25,27 +25,35 @@
     "things": [
         {
             "id": "planet1",
-            "x": 260,
+            "x": -300,
             "y": 0,
-            "size": 70,
-            "mass": -336,
-            "textureId": "Dysnomia_moon"
+            "size": 62,
+            "mass": -90,
+            "textureId": "planet_neptune"
         },
         {
             "id": "planet2",
             "x": 0,
-            "y": -500,
-            "size": 68,
-            "mass": 250,
+            "y": -610,
+            "size": 80,
+            "mass": 270,
             "textureId": "planet_gamma"
         },
         {
             "id": "planet3",
-            "x": -260,
+            "x": 0,
             "y": 0,
-            "size": 94,
-            "mass": 900,
+            "size": 98,
+            "mass": 700,
             "textureId": "Dysnomia_moon"
+        },
+        {
+            "id": "planet4",
+            "x": 300,
+            "y": 0,
+            "size": 62,
+            "mass": -90,
+            "textureId": "planet_neptune"
         }
     ],
     "camera": {

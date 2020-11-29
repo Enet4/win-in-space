@@ -2,9 +2,6 @@ import * as Phaser from 'phaser';
 import { localized } from '../locale';
 
 export default class LevelSelectScene extends Phaser.Scene {
-
-    private buttons: any;
-
     constructor() {
         super({
             key: 'LevelSelectScene'
@@ -67,10 +64,7 @@ export default class LevelSelectScene extends Phaser.Scene {
     }
 
     create(data) {
-        // called when the scene starts,
-        // use it to create your game objects
-
-        let backTile = this.add.tileSprite(
+        this.add.tileSprite(
             this.scale.canvas.width / 2,
             this.scale.canvas.height / 2,
             this.scale.canvas.width,
@@ -84,41 +78,29 @@ export default class LevelSelectScene extends Phaser.Scene {
         );
         title.setOrigin(0.5);
 
-        this.scale.on('resize', ({ width, height }) => {
-            // update viewport accordingly
-            this.cameras.main.setViewport(0, 0, width, height);
-            backTile.width = width;
-            backTile.x = width / 2;
-            backTile.height = height;
-            backTile.y = height / 2;
-        });
-
 
         let centerX = this.game.canvas.width / 2;
         let centerY = this.game.canvas.height / 2;
 
-        let levels = ['1', '2', '3'];
+        let levels = ['1', '2', '3', '4', '5', '6', 'wat'];
 
-        let x = 120;
+        let x = 150;
         levels.map((levelName) => {
-            // the text for start
-            this.createLevelButton(x, centerY - 90, levelName, (_ev) => {
+            this.createLevelButton(x, centerY - 90, levelName.replace('wat', '?'), (_ev) => {
                 setTimeout(() => {
-                    this.scale.off('resize');
                     this.scene.start('SpaceScene', { players: data.players, levelName});
                 }, 200);
             });
-            x += 150;
+            x += 180;
         });
 
         this.createButton(centerX, centerY + 100, localized('menu.generated'), (_ev) => {
             setTimeout(() => {
-                this.scale.off('resize');
                 this.scene.start('SpaceScene', { players: data.players, levelName: 'RANDOM', levelSeed: 'meh'});
             }, 200);
         });
 
-        this.createButton(centerX, this.game.canvas.height - 200, localized('menu.back'), (_ev) => {
+        this.createButton(centerX, this.game.canvas.height - 128, localized('menu.back'), (_ev) => {
             this.scale.off('resize');
             this.scene.start('MenuScene');
         });
