@@ -66,6 +66,26 @@ game.scale.on('resize', (data) => {
 }
 
 function initSndConfig() {
+    let soundEnabled = storeFacade.getItem("soundEnabled");
+    if (soundEnabled === null) {
+        soundEnabled = "true";
+    }
+
+    let aToggleSnd = document.getElementById("a-toggle-sound");
+    if (!aToggleSnd) {
+        console.error("Missing toggle sound text");
+        return;
+    }
+    if (soundEnabled === "false") {
+        aToggleSnd.innerText = "Enable all sound";
+        game.sound.mute = true;
+    } else {
+        aToggleSnd.innerText = "Disable all sound";
+        game.sound.mute = false;
+    }
+
+    storeFacade.setItem("soundEnabled", soundEnabled);
+
     let musicEnabled = storeFacade.getItem("musicEnabled");
     if (musicEnabled === null) {
         musicEnabled = "true";
@@ -81,22 +101,7 @@ function initSndConfig() {
         aToggleMusic.innerText = "Disable music";
     }
 
-    let soundEnabled = storeFacade.getItem("soundEnabled");
-    if (soundEnabled === null) {
-        soundEnabled = "true";
-    }
-    let aToggleSnd = document.getElementById("a-toggle-sound");
-    if (!aToggleSnd) {
-        console.error("Missing toggle sound text");
-        return;
-    }
-    if (soundEnabled === "false") {
-        aToggleSnd.innerText = "Enable all sound";
-    } else {
-        aToggleSnd.innerText = "Disable all sound";
-    }
-
-    storeFacade.setItem("soundEnabled", soundEnabled);
+    storeFacade.setItem("musicEnabled", musicEnabled);
 }
 
 initSndConfig();
