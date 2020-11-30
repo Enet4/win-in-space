@@ -2,16 +2,22 @@ import * as Phaser from 'phaser';
 import { localized } from '../locale';
 
 export default class HelpScene extends Phaser.Scene {
+    private assetsLoaded: boolean;
+
     constructor() {
         super({
             key: 'HelpScene'
         });
+        this.assetsLoaded = false;
     }
 
     init(data) {
     }
 
     preload() {
+        if (this.assetsLoaded) {
+            return;
+        }
         let txtLoading = this.add.text(
             this.scale.canvas.width / 2,
             this.scale.canvas.height / 2,
@@ -26,7 +32,9 @@ export default class HelpScene extends Phaser.Scene {
         this.load.image('guide2', 'assets/images/guide2.png');
         this.load.image('guide3', 'assets/images/guide3.png');
         this.load.image('guide4', 'assets/images/guide4.png');
+
         this.load.on('complete', () => {
+            this.assetsLoaded = true;
             txtLoading.destroy();
         });
     }
@@ -36,8 +44,8 @@ export default class HelpScene extends Phaser.Scene {
             fill: 'white',
             align: 'center',
             fontFamily: 'lemonmilk',
-            fontSize: '32pt',
-            backgroundColor: '#000040C0',
+            fontSize: '30pt',
+            backgroundColor: '#002277',
         };
         let txt = this.add.text(x, y, text, optionStyle);
         txt.setOrigin(0.5);
@@ -46,11 +54,11 @@ export default class HelpScene extends Phaser.Scene {
             txt.setFill("#3070DF");
         });
         txt.on('pointerup', (ev: any) => {
-            txt.setFill("#70F7FF");
+            txt.setFill('yellow');
             onClick(ev);
         });
         txt.on('pointerover', () => {
-            txt.setFill("#70F7FF");
+            txt.setFill('yellow');
         });
         txt.on('pointerout', () => {
             txt.setFill('white');
