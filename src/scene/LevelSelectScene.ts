@@ -84,14 +84,21 @@ export default class LevelSelectScene extends Phaser.Scene {
 
         let levels = ['1', '2', '3', '4', '5', '6', 'wat'];
 
-        let x = 150;
+        const coveredWidth = Math.max(
+            700,
+            this.scale.canvas.width - 200
+        );
+
+        let step = coveredWidth / (levels.length - 1);
+
+        let x = 100;
         levels.map((levelName) => {
-            this.createLevelButton(x, centerY - 90, levelName.replace('wat', '?'), (_ev) => {
+            this.createLevelButton(x, centerY - 50, levelName.replace('wat', '?'), (_ev) => {
                 setTimeout(() => {
                     this.scene.start('SpaceScene', { players: data.players, levelName});
                 }, 200);
             });
-            x += 180;
+            x += step;
         });
 
         this.createButton(centerX, centerY + 100, localized('menu.generated'), (_ev) => {
