@@ -64,9 +64,9 @@ class BootScene extends Phaser.Scene {
         }
 
         // load music and sound effects
-        this.load.audio('muffled-distant-explosion', 'assets/sounds/muffled-distant-explosion.wav');
+        this.load.audio('muffled-distant-explosion', 'assets/sounds/muffled-distant-explosion.ogg');
         this.load.audio('chunky-explosion', 'assets/sounds/chunky-explosion.ogg');
-        this.load.audio('bang', 'assets/sounds/bang.wav');
+        this.load.audio('bang', 'assets/sounds/bang.ogg');
         
         this.load.audio('win-in-space', 'assets/bgm/win in space-v0.4.ogg');
     }
