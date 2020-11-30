@@ -10,9 +10,7 @@ export default class SummaryScene extends Phaser.Scene {
     }
 
     public create(data: Statistics & {onQuit: () => void}) {
-        console.debug(`[SummaryScene] create`, data);
-
-        let labelStyle = {
+         let labelStyle = {
             fontSize: '12pt',
             align: 'center',
             fill: '#E0E0E0',
@@ -66,29 +64,30 @@ export default class SummaryScene extends Phaser.Scene {
         
     }
 
-    private createButton(x: number, y: number, text: string, onFire: (event: any) => void) {
-        let txt = this.add.text(x, y, text, {
+    private createButton(x: number, y: number, text: string, onClick: (event: any) => void) {
+        let rect = this.add.rectangle(0, 0, 66, 34, 0xCFCFCF);
+        let txt = this.add.text(0, 0, text, {
+            fontFamily: 'lemonmilk',
             fontSize: '16pt',
-            fill: '#F04499',
+            fill: 'black',
             align: 'center',
-            backgroundColor: '#C0C0C0',
         });
         txt.setOrigin(0.5);
-        txt.setInteractive();
-        txt.on('pointerdown', () => {
-            txt.setFill("#440000");
+        rect.setInteractive();
+        rect.on('pointerdown', () => {
+            txt.setFill('black');
         });
-        txt.on('pointerup', (ev: any) => {
-            txt.setFill("#FFF770");
-            onFire(ev);
+        rect.on('pointerup', (ev: any) => {
+            txt.setFill('yellow');
+            onClick(ev);
         });
-        txt.on('pointerover', () => {
-            txt.setFill("#FFF770");
+        rect.on('pointerover', () => {
+            txt.setFill('yellow');
         });
-        txt.on('pointerout', () => {
-            txt.setFill('#F04499');
+        rect.on('pointerout', () => {
+            txt.setFill('black');
         });
-        return txt;
+        return this.add.container(x, y, [rect, txt]);
     }
 }
 
