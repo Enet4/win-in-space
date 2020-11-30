@@ -119,8 +119,10 @@ export default class SpaceScene extends Phaser.Scene {
     /// the backdrop picked
     private background: string;
 
-    private sndChunkyExplosion: Phaser.Sound.BaseSound;
+    /// sound resource - distant explosion
     private sndDistantExplosion: Phaser.Sound.BaseSound;
+    /// sound resource - chunky explosion
+    private sndChunkyExplosion: Phaser.Sound.BaseSound;
 
     constructor() {
         super({
@@ -277,14 +279,6 @@ export default class SpaceScene extends Phaser.Scene {
             }
         });
 
-        let lastX = 0;
-        let lastY = 0;
-        this.input.addListener('pointerdown', (pointer) => {
-            if (!this.isAngling && pointer.button === 1) {
-                lastX = pointer.downX;
-                lastY = pointer.downY;
-            }
-        });
         this.input.addListener('pointermove', (pointer) => {
             if (this.isAngling) {
                 this.angleLine.setTo(this.currentPlanet.x, this.currentPlanet.y, pointer.worldX, pointer.worldY);
@@ -292,11 +286,6 @@ export default class SpaceScene extends Phaser.Scene {
                 angle = Math.round(angle * 180 / Math.PI);
                 this.currentPlanet.canon!.setAngle(angle);
                 this.hud.setDecision(angle);
-            } else if (pointer.isDown && pointer.button === 1) {
-                let relX = pointer.position.x - lastX;
-                let relY = pointer.position.y - lastY;
-                //console.debug("pointermove while middle button is pressed", relX, relY, pointer);
-                // !!! move camera?
             }
         });
         this.input.addListener('pointerup', (pointer) => {
