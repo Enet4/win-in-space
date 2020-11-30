@@ -14,19 +14,21 @@ export interface Projectile {
 }
 
 export function createProjectile(scene: Phaser.Scene, x: number, y: number, velX: number, velY: number): Projectile {
-    let particlesTrail = scene.add.particles('tiny-star');
-    let particlesHit = scene.add.particles('tiny-star');
+    const particlesTrail = scene.add.particles('tiny-star');
+    const particlesHit = scene.add.particles('tiny-star');
 
-    let image = scene.add.image(x, y, 'bullet168');
-    let flare = scene.add.image(x, y, 'flare');
-    let prtcTrail = particlesTrail.createEmitter({
+    const image = scene.add.image(x, y, 'bullet168');
+    const flare = scene.add.image(x, y, 'flare')
+        .setAlpha(0.75)
+        .setBlendMode(Phaser.BlendModes.ADD);
+    const prtcTrail = particlesTrail.createEmitter({
         follow: image,
         frequency: 20,
         lifespan: 2000,
         alpha: 0.75,
     });
     prtcTrail.stop();
-    let prtcHit = particlesHit.createEmitter({
+    const prtcHit = particlesHit.createEmitter({
         active: false,
         follow: image,
         radial: true,
