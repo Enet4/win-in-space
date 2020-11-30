@@ -10,7 +10,7 @@
         "x": 900,
         "y": -340,
         "zoom": 1,
-        "minZoom": 0.6,
+        "minZoom": 0.8,
         "maxZoom": 2
     },
     "lifePlanets": [
