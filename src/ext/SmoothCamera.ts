@@ -5,6 +5,9 @@ export default class SmoothCameraController extends Phaser.Cameras.Controls.Smoo
     inputNavigation: boolean;
     dragPointX: number;
     dragPointY: number;
+    dragPointX2: number;
+    dragPointY2: number;
+    dragging: boolean;
     minZoom: number;
     maxZoom: number;
 
@@ -28,6 +31,7 @@ export default class SmoothCameraController extends Phaser.Cameras.Controls.Smoo
 
         this.dragPointX = 0;
         this.dragPointY = 0;
+        this.dragging = false;
 
         camera.scene.input.on('wheel', (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
             if (deltaY !== 0) {
@@ -35,31 +39,23 @@ export default class SmoothCameraController extends Phaser.Cameras.Controls.Smoo
             }
         });
         camera.scene.input.on('pointerdown', (pointer) => {
-            //console.debug('pointerdown', pointer.isDown);
-            this.dragPointX = pointer.worldX;
-            this.dragPointY = pointer.worldY;
+            if (pointer.button === 1 || pointer.button === 2) {
+                this.dragPointX = pointer.position.x;
+                this.dragPointY = pointer.position.y;
+                this.dragPointX2 = pointer.position.x;
+                this.dragPointY2 = pointer.position.y;
+                this.dragging = true;
+            }
         });
         camera.scene.input.on('pointerup', (pointer) => {
-            //console.debug('pointerup', pointer.isDown);
+            this.dragging = false;
         });
 
         camera.scene.input.on('pointermove', (pointer) => {
-            /*
-            if (this.inputNavigation) {
-                if (pointer.isDown) {
-                    console.debug('pointermove', pointer);
-                    let deltaX = pointer.worldX - this.dragPointX;
-                    let deltaY = pointer.worldY - this.dragPointY;
-                    console.debug("drag ", deltaX, deltaY);
-                    this.camera.pan(
-                        this.camera.centerX - deltaX,
-                        this.camera.centerY - deltaY,
-                        50,
-                        'Power2'
-                    );
-                }
+            if (this.dragging) {
+                this.dragPointX2 = pointer.position.x;
+                this.dragPointY2 = pointer.position.y;
             }
-            */
         });
     }
 
@@ -73,12 +69,18 @@ export default class SmoothCameraController extends Phaser.Cameras.Controls.Smoo
                 this.camera.zoom = this.maxZoom;
             }
         }
+
+        if (this.dragging) {
+            let diffX = this.dragPointX2 - this.dragPointX;
+            let diffY = this.dragPointY2 - this.dragPointY;
+
+            this.camera.scrollX += diffX * 2e-3 * delta;
+            this.camera.scrollY += diffY * 2e-3 * delta;
+        }
     }
 
     onWheelY(delta: number) {
         if (this.inputNavigation) {
-            let {x: mouseX, y: mouseY} = this.camera.scene.input.mousePointer;
-
             const zoomDelta = 0.05;
 
             let newZoom = (delta > 0) ? this.camera.zoom - zoomDelta : this.camera.zoom + zoomDelta;
