@@ -66,6 +66,8 @@ interface LifePlanetEntity extends LifePlanet {
     canon?: Phaser.GameObjects.Image;
     /// the nation flags by player
     flag: Phaser.GameObjects.Image;
+    /// the particle emitter for when the planet explodes
+    explosionParticleEmitter: Phaser.GameObjects.Particles.ParticleEmitter,
     /// the angle and force by player
     decision: TurnDecision;
     /// the paths of the last trajectory, for future rendering
@@ -266,6 +268,18 @@ export default class SpaceScene extends Phaser.Scene {
                 img.addListener('pointerdown', hPointerDown);
             }
 
+            const particlesHit = this.add.particles('tiny-star');
+            const explosionParticleEmitter = particlesHit.createEmitter({
+                active: false,
+                follow: img,
+                radial: true,
+                speed: 180,
+                lifespan: 120,
+                tint: [0xCF6A00, 0xCF2800, 0xCF0000],
+                scale: 2.5,
+                alpha: 0.75,
+            });
+
             return {
                 ...planet,
                 decision: {
@@ -276,6 +290,7 @@ export default class SpaceScene extends Phaser.Scene {
                 canon,
                 img,
                 flag,
+                explosionParticleEmitter,
             }
         });
 
@@ -377,8 +392,21 @@ export default class SpaceScene extends Phaser.Scene {
                 let planet = this.lifePlanets[pId];
                 // explode stuff
                 this.sndChunkyExplosion.play();
-                // TODO show more explosions 'n' stuff
-                this.cameras.main.shake(280, 0.2);
+                planet.explosionParticleEmitter.active = true;
+                const {x, y} = planet;
+                const continuousExplosionH = setInterval(() => {
+                    let pX = x + (Math.random() - 0.5) * 72;
+                    let pY = y + (Math.random() - 0.5) * 72;
+                    planet.explosionParticleEmitter.explode(42, pX, pY);
+                }, 36);
+                setTimeout(() => {
+                    clearInterval(continuousExplosionH);
+                }, 740);
+                
+                planet.explosionParticleEmitter.explode(128, x + 48, y);
+                planet.explosionParticleEmitter.explode(128, x, y - 48);
+                planet.explosionParticleEmitter.explode(128, x, y + 48);
+                this.cameras.main.shake(280, 0.15);
                 this.cameras.main.pan(planet.x, planet.y, 500, 'Cubic');
                 planet.img.setTint(0x222222);
                 planet.flag.setTintFill(0xFFFFFF);
