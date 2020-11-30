@@ -83,17 +83,17 @@ class MenuScene extends Phaser.Scene {
         let centerY = this.game.canvas.height / 2;
 
         // the text for start
-        let btn1 = this.createButton(centerX, centerY - 80, localized('menu.one_player'), (_ev) => {
+        let btn1 = this.createButton(centerX, centerY - 60, localized('menu.one_player'), (_ev) => {
             this.scale.off('resize');
             this.scene.start('LevelSelectScene', { players: 1 });
         });
 
-        let btn2 = this.createButton(centerX, centerY + 40, localized('menu.two_players'), (_ev) => {
+        let btn2 = this.createButton(centerX, centerY + 60, localized('menu.two_players'), (_ev) => {
             this.scale.off('resize');
             this.scene.start('LevelSelectScene', { players: 2 });
         });
 
-        let btn3 = this.createButton(centerX, centerY + 160, localized('menu.help'), (_ev) => {
+        let btn3 = this.createButton(centerX, centerY + 180, localized('menu.help'), (_ev) => {
             this.scale.off('resize');
             this.scene.start('HelpScene');
         });
