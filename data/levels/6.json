@@ -35,8 +35,8 @@
             "id": "planet2",
             "x": -200,
             "y": -39,
-            "size": 40,
-            "mass": 132,
+            "size": 80,
+            "mass": 698,
             "textureId": "Dysnomia_moon"
         },
         {
