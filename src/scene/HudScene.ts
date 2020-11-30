@@ -25,16 +25,12 @@ export default class HudScene extends Phaser.Scene {
     }
 
     public init() {
-        console.debug(`[HudScene] init`);
     }
 
     public preload() {
-        console.debug(`[HudScene] preload`);
-
     }
 
     public create(data) {
-        console.debug(`[HudScene] create`, data);
         this.fireClickHandler = data.onFire;
         this.powerUpHandler = data.onPowerUp;
         this.powerDownHandler = data.onPowerDown;
@@ -57,7 +53,7 @@ export default class HudScene extends Phaser.Scene {
             this.add.text(104, 18, '«loading»', inputStyle),
             this.add.text(17, 60, `${localized('game.force')}:`, labelStyle),
             this.add.text(104, 62, '«loading»', inputStyle),
-            this.createFireButton(60, 102),
+            this.createFireButton(w / 2, h - 32),
         ]);
     
         ui.setScrollFactor(0, 0);
@@ -66,9 +62,9 @@ export default class HudScene extends Phaser.Scene {
  
         this.powerPad = this.add.container(0, 0, [
             this.add.rectangle(0, 0, 32, 110, 0x002277, 0.25),
-            this.createPowerButton(-9, -40, '+', this.powerUpHandler),
+            this.createPowerButton(-8, -40, '+', this.powerUpHandler),
             this.add.text(-8, -4, '«»', {fontSize: '14pt'}),
-            this.createPowerButton(-9, 26, '-', this.powerDownHandler),
+            this.createPowerButton(-8, 26, '-', this.powerDownHandler),
         ]);
         this.powerPad.setScrollFactor(0, 0);
         this.powerPad.setVisible(false);
@@ -167,55 +163,57 @@ export default class HudScene extends Phaser.Scene {
     }
 
     private createFireButton(x: number, y: number) {
-        let txt = this.add.text(x, y, localized('game.fire'), {
+        let rect = this.add.rectangle(0, 0, 66, 34, 0xCFCFCF);
+        let txt = this.add.text(0, 0, localized('game.fire'), {
+            fontFamily: 'lemonmilk',
             fontSize: '16pt',
-            fill: '#F04499',
+            fill: 'black',
             align: 'center',
-            backgroundColor: '#C0C0C0',
         });
-        txt.setInteractive();
-        txt.on('pointerdown', () => {
-            txt.setFill("#440000");
-        });
-        txt.on('pointerup', (ev: any) => {
-            txt.setFill("#FFF770");
+        txt.setOrigin(0.5);
+        rect.setInteractive();
+        rect.on('pointerdown', (ev) => {
+            txt.setFill('black');
             this.onFire(ev);
         });
-        txt.on('pointerover', () => {
-            txt.setFill("#FFF770");
+        rect.on('pointerup', () => {
+            txt.setFill('#C00000');
         });
-        txt.on('pointerout', () => {
-            txt.setFill('#F04499');
+        rect.on('pointerover', () => {
+            txt.setFill('#C00000');
         });
-        return txt;
+        rect.on('pointerout', () => {
+            txt.setFill('black');
+        });
+        return this.add.container(x, y, [rect, txt]);
     }
 
     private createPowerButton(x: number, y: number, text: string, onClick: (evt: any) => void) {
         let txt = this.add.text(x, y, text, {
             fontSize: '16pt',
-            fill: '#F04499',
+            fontStyle: 'bold',
+            fill: 'black',
             align: 'center',
-            backgroundColor: '#C0C0C0',
+            backgroundColor: '#CFCFCF',
         });
         txt.setInteractive();
         txt.on('pointerdown', (evt) => {
-            txt.setFill("#440000");
+            txt.setFill('black');
             onClick(evt);
         });
         txt.on('pointerup', () => {
-            txt.setFill("#FFF770");
+            txt.setFill('#C00000');
         });
         txt.on('pointerover', () => {
-            txt.setFill("#FFF770");
+            txt.setFill('#C00000');
         });
         txt.on('pointerout', () => {
-            txt.setFill('#F04499');
+            txt.setFill('black');
         });
         return txt;
     }
 
     private onFire(evt) {
-        console.debug("[HudScene] onFire", evt);
         this.fireClickHandler();
     }
 }
