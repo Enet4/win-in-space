@@ -92,26 +92,30 @@ export default class HelpScene extends Phaser.Scene {
 
         // the help text for start
         let contents = [
-            { x: width / 4, y: 40, msgKey: 'help.1'},
-            { x: 3 * width / 4, y: 40, msgKey: 'help.2'},
-            { x: width / 4, y: 408, msgKey: 'help.3'},
-            { x: 3 * width / 4, y: 408, msgKey: 'help.4'},
+            { x: width / 4, y: 32, msgKey: 'help.1'},
+            { x: 3 * width / 4, y: 32, msgKey: 'help.2'},
+            { x: width / 4, y: height / 2, msgKey: 'help.3'},
+            { x: 3 * width / 4, y: height / 2, msgKey: 'help.4'},
         ];
         contents.map(({x, y, msgKey}) =>
             this.createMessage(x, y, localized(msgKey))
         );
 
-        let guide1 = this.add.image(width / 4, 232, 'guide1');
-        guide1.setDisplaySize(width * 0.46, width * 0.15)
+        this.add.image(width / 4, 70, 'guide1')
+            .setOrigin(0.5, 0)
+            .setDisplaySize(width * 0.46, width * 0.15)
 
-        let guide2 = this.add.image(3 * width / 4, 240, 'guide2');
-        guide2.setScale(0.65, 0.65);
+        this.add.image(3 * width / 4, 70, 'guide2')
+            .setOrigin(0.5, 0)
+            .setDisplaySize(width * 0.3, width * 0.2);
 
-        let guide3 = this.add.image(240, 600, 'guide3');
-        guide3.setScale(0.5, 0.5);
+        this.add.image(width / 4, height / 2 + 32, 'guide3')
+            .setOrigin(0.5, 0)
+            .setDisplaySize(width * 0.3, width * 0.225);
 
-        let guide4 = this.add.image(3 * width / 4, 600, 'guide4');
-        guide4.setScale(0.64, 0.64);
+        this.add.image(3 * width / 4, height / 2 + 42, 'guide4')
+            .setOrigin(0.5, 0)
+            .setDisplaySize(width * 0.35, width * 0.15);
 
         let fnBack = () => {
             this.scale.off('resize');
@@ -120,9 +124,10 @@ export default class HelpScene extends Phaser.Scene {
 
         this.createButton(
             this.cameras.main.width / 2,
-            this.cameras.main.height - 80,
+            this.cameras.main.height - 20,
             localized('menu.back'),
-            fnBack);
+            fnBack
+        ).setOrigin(0.5, 1);
 
         let btnOk = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER, true, true);
         btnOk.addListener('up', fnBack);
