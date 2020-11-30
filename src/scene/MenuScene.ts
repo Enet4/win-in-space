@@ -36,11 +36,11 @@ class MenuScene extends Phaser.Scene {
             txt.setFill("#3070DF");
         });
         txt.on('pointerup', (ev: any) => {
-            txt.setFill("#70F7FF");
+            txt.setFill('yellow');
             onClick(ev);
         });
         txt.on('pointerover', () => {
-            txt.setFill("#70F7FF");
+            txt.setFill('yellow');
         });
         txt.on('pointerout', () => {
             txt.setFill('white');

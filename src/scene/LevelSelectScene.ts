@@ -22,11 +22,11 @@ export default class LevelSelectScene extends Phaser.Scene {
             txt.setFill("#000000");
         });
         rect.on('pointerup', (ev: any) => {
-            txt.setFill("#FFFF70");
+            txt.setFill('yellow');
             onClick(ev);
         });
         rect.on('pointerover', (ev: any) => {
-            txt.setFill("#FFFF70");
+            txt.setFill('yellow');
         });
         rect.on('pointerout', () => {
             txt.setFill('white');
@@ -51,11 +51,11 @@ export default class LevelSelectScene extends Phaser.Scene {
             txt.setFill("#3070DF");
         });
         txt.on('pointerup', (ev: any) => {
-            txt.setFill("#70F7FF");
+            txt.setFill('yellow');
             onClick(ev);
         });
         txt.on('pointerover', () => {
-            txt.setFill("#70F7FF");
+            txt.setFill('yellow');
         });
         txt.on('pointerout', () => {
             txt.setFill('white');
