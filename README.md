@@ -1,6 +1,8 @@
-# Win in Space
+# ![Win in Space](https://img.itch.zone/aW1nLzQ2OTMwODcucG5n/315x250%23c/5SgceA.png)
 
-A turn-based game still in development.
+Choose the right angle and power of fire to eliminate the interplanetary threat!
+
+Win in Space is a turn-based game where players are surrounded by space objects which affect the trajectory of your projectiles.
 
 [See the game on itch.io.](https://e-net4.itch.io/win-in-space)
 
@@ -38,8 +40,3 @@ are licensed under a [Creative Commons Attribution-ShareAlike 4.0 International 
 ![](https://i.creativecommons.org/l/by-sa/4.0/80x15.png)
 
 Please see [SOURCES.md](SOURCES.md) for the list of third party content.
-
-## License and Notice of use
-
-All code is licensed under the MIT (see [LICENSE-MIT](./LICENSE-MIT)).
-
