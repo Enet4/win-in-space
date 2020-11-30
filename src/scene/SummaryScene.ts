@@ -51,6 +51,7 @@ export default class SummaryScene extends Phaser.Scene {
                 this.add.text(0, 60, localized('game.summary.green'), {
                     ...labelStyle,
                     fontSize: '14pt',
+                    fontFamily: 'lemonmilk',
                     fill: 'green',
                 }).setOrigin(0.5)
             );
