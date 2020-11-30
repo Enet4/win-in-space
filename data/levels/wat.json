@@ -1,10 +1,10 @@
 {
     "comment": "...What's going on?",
     "bounds": {
-        "left": -2100,
-        "top": -1650,
-        "right": 2100,
-        "bottom": 1650
+        "left": -2500,
+        "top": -1800,
+        "right": 2500,
+        "bottom": 1800
     },
     "lifePlanets": [
         {
