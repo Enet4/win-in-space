@@ -21,17 +21,18 @@ export default class ReallyQuitScene extends Phaser.Scene {
                 fill: '#C0C0C0',
             }),
             this.createButton(-100, 20, localized('game.quit'), () => {
-                this.add.text(
+                let txtLose = this.add.text(
                     this.scale.canvas.width / 2,
                     this.scale.canvas.height / 2,
                     localized('game.lose'),
                     {
                         fontFamily: 'lemonmilk',
-                        fontSize: '18pt',
+                        fontSize: '24pt',
                         fill: '#CF0000',
                         align: 'center',
                     }
                 );
+                txtLose.setOrigin(0.5);
                 ui.setVisible(false);
                 setTimeout(() => {
                     this.scene.stop('ReallyQuitScene');
