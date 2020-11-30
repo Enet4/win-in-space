@@ -78,6 +78,8 @@ export default class SpaceScene extends Phaser.Scene {
 
     private btnEscape: Phaser.Input.Keyboard.Key;
     private btnEnter: Phaser.Input.Keyboard.Key;
+    private btnPowerUp: Phaser.Input.Keyboard.Key;
+    private btnPowerDown: Phaser.Input.Keyboard.Key;
     private cameraControl: SmoothCameraController;
 
     // -- HUD scene --
@@ -128,8 +130,11 @@ export default class SpaceScene extends Phaser.Scene {
 
     init(data: SpaceSceneData) {
 
-        this.btnEscape = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, true, true);
-        this.btnEnter = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER, true, true);
+        this.btnEscape = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC, true);
+        this.btnEnter = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER, true);
+        
+        this.btnPowerUp = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PLUS, true);
+        this.btnPowerDown = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.MINUS, true);
 
         let levelName = data.levelName || 'RANDOM';
         if (levelName === 'RANDOM') {
@@ -179,6 +184,9 @@ export default class SpaceScene extends Phaser.Scene {
         this.btnEnter.addListener('down', this.onMainButtonDown.bind(this));
         this.btnEnter.addListener('up', this.onMainButtonRelease.bind(this));
         this.btnEscape.addListener('down', this.onEscapeDown.bind(this));
+        
+        this.btnPowerUp.addListener('down', this.powerUp.bind(this));
+        this.btnPowerDown.addListener('down', this.powerDown.bind(this));
 
         this.input.addListener('pointermove', (pointer) => {
             if (pointer.isDown && pointer.button === 0) {
@@ -340,33 +348,11 @@ export default class SpaceScene extends Phaser.Scene {
                 console.log(`[space] onFireClick callback`);
                 this.onFire();
             },
-            onPowerUp: () => {
-                if (this.state === State.Playing) {
-                    // update power appropriately
-                    let decision = this.currentPlanet.decision;
-                    if (decision.force) {
-                        if (decision.force < this.lifePlanets[this.currentPlayer].power) {
-                            decision.force += 1;
-                            this.hud.setDecision(decision.angle, decision.force);
-                        }
-                    }
-                }
-            },
-            onPowerDown: () => {
-                if (this.state === State.Playing) {
-                    // update power appropriately
-                    let decision = this.currentPlanet.decision;
-                    if (decision.force) {
-                        if (decision.force > 1) {
-                            decision.force -= 1;
-                            this.hud.setDecision(decision.angle, decision.force);
-                        }
-                    }
-                }
-            },
+            onPowerUp: this.powerUp.bind(this),
+            onPowerDown: this.powerDown.bind(this),
         });
         this.hud = this.scene.get('HudScene') as HudScene;
-        this.hud.resetPreviousDecision()
+        this.hud.resetPreviousDecision();
 
         // begin the game in a moment
         setTimeout(() => {
@@ -411,11 +397,6 @@ export default class SpaceScene extends Phaser.Scene {
                     planet.canon.setVisible(false);
                 }
 
-                if (pId === this.currentPlayer) {
-                    // humiliation
-                    this.statistics.selfDestruct = true;
-                }
-
                 if (pId === 0 && this.numHumans === 1) {
                     // you lose
                     this.hud.displayMessage(`\n\n\n${localized('game.lose')}`, 'red');
@@ -429,10 +410,14 @@ export default class SpaceScene extends Phaser.Scene {
                 this.state = State.End;
 
                 // summary
-                this.scene.launch('SummaryScene', {
-                    ...this.statistics,
-                    onQuit: this.end.bind(this)
-                });
+                setTimeout(() => {
+                    this.scene.launch('SummaryScene', {
+                        ...this.statistics,
+                        // humiliation detection
+                        selfDestruct: pId === this.currentPlayer,
+                        onQuit: this.end.bind(this)
+                    });
+                }, 750);
 
             } else {
                 // hit some space thing
@@ -453,10 +438,10 @@ export default class SpaceScene extends Phaser.Scene {
         this.trajectoryBuilder.update(delta, this.projectile);
     }
 
-    onMainButtonDown(e) {
+    private onMainButtonDown(e) {
     }
 
-    onMainButtonRelease(e) {
+    private onMainButtonRelease(e) {
         if (this.state === State.Playing && !this.isAngling) {
             this.onFire();
         } else if (this.state === State.End) {
@@ -464,7 +449,7 @@ export default class SpaceScene extends Phaser.Scene {
         }
     }
 
-    onEscapeDown(e) {
+    private onEscapeDown(e) {
         console.debug(`Esc key down`);
         if (this.state === State.End) {
             this.end();
@@ -480,10 +465,43 @@ export default class SpaceScene extends Phaser.Scene {
         }
     }
 
+    private powerUp() {
+        if (this.state === State.Playing) {
+            // update power appropriately
+            let decision = this.currentPlanet.decision;
+            if (decision.force) {
+                if (decision.force < this.lifePlanets[this.currentPlayer].power) {
+                    decision.force += 1;
+                    this.hud.setDecision(decision.angle, decision.force);
+                }
+            }
+        }
+    }
+
+    private powerDown() {
+        if (this.state === State.Playing) {
+            // update power appropriately
+            let decision = this.currentPlanet.decision;
+            if (decision.force) {
+                if (decision.force > 1) {
+                    decision.force -= 1;
+                    this.hud.setDecision(decision.angle, decision.force);
+                }
+            }
+        }
+    }
+
     private end() {
         this.scene.stop('HudScene');
         this.scene.stop('BackgroundScene');
         this.scene.stop('SummaryScene');
+
+        // clean up listeners and other resources
+        this.btnEnter.destroy();
+        this.btnEscape.destroy();
+        this.btnPowerDown.destroy();
+        this.btnPowerUp.destroy();
+        
         this.scene.start('MenuScene');
     }
 
