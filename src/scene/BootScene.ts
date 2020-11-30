@@ -12,23 +12,24 @@ class BootScene extends Phaser.Scene {
         console.log("i am boot");
 
         const progress = this.add.graphics();
+        progress.defaultStrokeColor = 0xFFFFFF;
+        progress.defaultStrokeWidth = 2;
 
         this.load.on('progress', (value: number) => {
             progress.clear();
             progress.fillStyle(0xffffff, 1);
-            progress.fillRect(16, +this.sys.game.config.height / 2, (+this.sys.game.config.width - 32) * value, 60);
+            progress.strokeRect(100, +this.sys.game.config.height / 2, +this.sys.game.config.width - 200, 60);
+            progress.fillRect(100, +this.sys.game.config.height / 2, (+this.sys.game.config.width - 200) * value, 60);
         });
 
-        let txtLoading = this.add.text(
+        this.add.text(
             this.scale.canvas.width / 2,
             this.scale.canvas.height / 2 + 120,
             localized('boot.loading'), {
                 fontFamily: 'lemonmilk',
                 fontSize: '20pt',
                 align: 'center',
-            });
-        txtLoading.setOrigin(0.5);
-
+            }).setOrigin(0.5);
 
         // Register a load complete event to launch the title screen when all files are loaded
         this.load.on('complete', () => {
