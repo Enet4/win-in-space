@@ -80,9 +80,6 @@ export default class HelpScene extends Phaser.Scene {
     }
 
     create() {
-        // called when the scene starts,
-        // use it to create your game objects
-
         this.scale.on('resize', ({width, height}) => {
             // update viewport accordingly
             this.cameras.main.setViewport(0, 0, width, height);
@@ -101,21 +98,21 @@ export default class HelpScene extends Phaser.Scene {
             this.createMessage(x, y, localized(msgKey))
         );
 
-        this.add.image(width / 4, 70, 'guide1')
+        this.add.image(width / 4, 70, 'guide1') // 3.15 ratio
             .setOrigin(0.5, 0)
-            .setDisplaySize(width * 0.46, width * 0.15)
+            .setDisplaySize(height * 1.071, height * 0.34)
 
-        this.add.image(3 * width / 4, 70, 'guide2')
+        this.add.image(3 * width / 4, 70, 'guide2') // 1.5238 ratio
             .setOrigin(0.5, 0)
-            .setDisplaySize(width * 0.3, width * 0.2);
+            .setDisplaySize(height * 0.533, height * 0.35);
 
-        this.add.image(width / 4, height / 2 + 32, 'guide3')
+        this.add.image(width / 4, height / 2 + 32, 'guide3') // 1.359 ratio
             .setOrigin(0.5, 0)
-            .setDisplaySize(width * 0.3, width * 0.225);
+            .setDisplaySize(height * 0.5164, height * 0.38);
 
-        this.add.image(3 * width / 4, height / 2 + 42, 'guide4')
+        this.add.image(3 * width / 4, height / 2 + 42, 'guide4') // 2.3675 ratio
             .setOrigin(0.5, 0)
-            .setDisplaySize(width * 0.35, width * 0.15);
+            .setDisplaySize(height * 0.8286, height * 0.35);
 
         let fnBack = () => {
             this.scale.off('resize');
