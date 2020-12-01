@@ -9,8 +9,8 @@
     "camera": {
         "x": 900,
         "y": -340,
-        "zoom": 1,
-        "minZoom": 0.8,
+        "zoom": 0.85,
+        "minZoom": 0.7,
         "maxZoom": 2
     },
     "lifePlanets": [
