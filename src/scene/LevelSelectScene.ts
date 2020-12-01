@@ -64,23 +64,26 @@ export default class LevelSelectScene extends Phaser.Scene {
     }
 
     create(data) {
-        this.add.tileSprite(
-            this.scale.canvas.width / 2,
-            this.scale.canvas.height / 2,
-            this.scale.canvas.width,
-            this.scale.canvas.height,
-            'HD-Space-Wallpaper-For-Background-11');
-
-        let title = this.add.image(
+        let back = this.add.image(0, 0, 'HD-Space-Wallpaper-For-Background-11')
+            .setOrigin(0, 0);
+        
+        ((width, height) => {
+            let wRatio = width / 1920;
+            let hRatio = height / 1080;
+            back.setScale(Math.max(wRatio, hRatio));
+        })(this.scale.canvas.width, this.scale.canvas.height);
+    
+        this.add.image(
             this.scale.canvas.width / 2,
             128,
             'title'
-        );
-        title.setOrigin(0.5);
-
+        ).setOrigin(0.5);
 
         let centerX = this.game.canvas.width / 2;
         let centerY = this.game.canvas.height / 2;
+
+
+        // level buttons
 
         let levels = ['1', '2', '3', '4', '5', '6', 'wat'];
 

@@ -49,38 +49,34 @@ class MenuScene extends Phaser.Scene {
     }
 
     create() {
-        // called when the scene starts,
-        // use it to create your game objects
+        let back = this.add.image(0, 0, 'HD-Space-Wallpaper-For-Background-11')
+            .setOrigin(0, 0);
 
-        let backTile = this.add.tileSprite(
-            this.scale.canvas.width / 2,
-            this.scale.canvas.height / 2,
-            this.scale.canvas.width,
-            this.scale.canvas.height,
-            'HD-Space-Wallpaper-For-Background-11');
+        function fixScale(width, height) {
+            let wRatio = width / 1920;
+            let hRatio = height / 1080;
+            back.setScale(Math.max(wRatio, hRatio));
+        }
+        fixScale(this.scale.canvas.width, this.scale.canvas.height);
+
+        const centerX = this.game.canvas.width / 2;
+        const centerY = this.game.canvas.height / 2;
 
         let title = this.add.image(
-            this.scale.canvas.width / 2,
+            centerX,
             128,
             'title'
-        );
-        title.setOrigin(0.5);
+        ).setOrigin(0.5);
 
         this.scale.on('resize', ({ width, height }) => {
-            // update viewport accordingly
+            // update viewport and objects accordingly
             this.cameras.main.setViewport(0, 0, width, height);
-            btn1.setX(width / 2);
-            btn2.setX(width / 2);
-            btn3.setX(width / 2);
-            backTile.width = width;
-            backTile.x = width / 2;
-            backTile.height = height;
-            backTile.y = height / 2;
+            btn1.setPosition(width / 2, height / 2 - 60);
+            btn2.setPosition(width / 2, height / 2 + 60);
+            btn3.setPosition(width / 2, height / 2 + 180);
+            title.setX(width / 2);
+            fixScale(width, height);
         });
-
-
-        let centerX = this.game.canvas.width / 2;
-        let centerY = this.game.canvas.height / 2;
 
         // the text for start
         let btn1 = this.createButton(centerX, centerY - 60, localized('menu.one_player'), (_ev) => {
