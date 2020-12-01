@@ -57,10 +57,6 @@ let game = new Phaser.Game({
     version: require('../package.json').version,
 });
 
-game.scale.on('resize', (data) => {
-    console.debug('RESIZE:', data);
-});
-
 (document.getElementById('content') as HTMLCanvasElement).oncontextmenu = (e) => {
     e.preventDefault();
 }
