@@ -4,7 +4,8 @@ Choose the right angle and power of fire to eliminate the interplanetary threat!
 
 Win in Space is a turn-based game where players are surrounded by space objects which affect the trajectory of your projectiles.
 
-[See the game on itch.io.](https://e-net4.itch.io/win-in-space)
+[Play the game here](https://enet4.github.io/win-in-space)
+or [see the game on itch.io](https://e-net4.itch.io/win-in-space).
 
 ## Technical Information
 
