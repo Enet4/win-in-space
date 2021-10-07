@@ -24,7 +24,9 @@ module.exports = {
       CANVAS_RENDERER: true // I did this to make webpack work, but I'm not really sure it should always be true
     }),
     new CleanWebpackPlugin({ cleanAfterEveryBuildPatterns: ['build'] }),
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^\.\/locale$|moment$/
+    }),
     //new webpack.optimize.CommonsChunkPlugin({ name: 'vendor' /* chunkName= */, filename: 'js/vendor.bundle.js' /* filename= */ }),
     new HtmlWebpackPlugin({
       filename: 'index.html', // path.resolve(__dirname, 'build', 'index.html'),
